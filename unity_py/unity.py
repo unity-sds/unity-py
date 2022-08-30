@@ -1,4 +1,5 @@
 import os
+import requests
 from configparser import ConfigParser
 
 DEFAULT_CONFIG = os.path.dirname(os.path.realpath(__file__)) + "/unity.cfg"
@@ -24,6 +25,31 @@ class Unity(object):
             response = response + "{}:{}\n".format(section, dict(self._config[section]))
 
         return response
+
+    def submit_job(self, app_name, job_config):
+
+        headers = {
+            'Content-type': 'application/json'
+        }
+
+        try:
+            sps_endpoint = get_config(self._config, 'jobs', 'sps_wpst_endpoint')
+            job_url = sps_endpoint + "/processes/{}/jobs".format(app_name)
+            r = requests.post(job_url, headers=headers, json=job_config)
+
+            job_location = r.headers['location']
+
+            # Hack to remove localhost domain/port until this can be updated in the WPST API
+            if "http://127.0.0.1:5000" in job_location:
+                job_location = job_location.replace("http://127.0.0.1:5000", sps_endpoint)
+
+            job_id = job_location.replace(job_url + "/", "")
+
+        except requests.exceptions.HTTPError as e:
+            # Add Logging Mechanism
+            raise
+
+        return job_id
 
 
 def read_config(config_files):
