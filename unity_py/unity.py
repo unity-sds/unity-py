@@ -28,3 +28,7 @@ def read_config(config_files):
                 config.read_file(source)
 
     return config
+
+
+def get_config(config, section, setting):
+    return config.get(section.upper(), setting)
