@@ -33,7 +33,7 @@ class Unity(object):
         }
 
         try:
-            sps_endpoint = get_config(self._config, 'jobs', 'sps_wpst_endpoint')
+            sps_endpoint = get_config(self._config, 'jobs', 'sps_wpst_domain')
             job_url = sps_endpoint + "/processes/{}/jobs".format(app_name)
             r = requests.post(job_url, headers=headers, json=job_config)
 
