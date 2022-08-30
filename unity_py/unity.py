@@ -6,8 +6,19 @@ DEFAULT_CONFIG = os.path.dirname(os.path.realpath(__file__)) + "/unity.cfg"
 
 
 class Unity(object):
+    """
+    The intention of the Unity Python class is to help the user get the most out of
+    using Unity without needing to worry about the details about *how* to interact with Unity
+    services. This is achieved by a default set of configuration settings, overridable by the user,
+    and methods that expose the available Unity operations.
+    """
 
     def __init__(self, config_file: str = None):
+        """
+        :param config_file: The path to a configuration settings file that
+        includes settings the user wants to override. The user may choose to override
+        one or more settings.  See `unity.cfg` for the list of settings that may be overridden.
+        """
 
         # Read Unity Configuration Settings, if a user_config exists, any settings
         # specified in it will take precedence over the respective settings in the
@@ -26,7 +37,13 @@ class Unity(object):
 
         return response
 
-    def submit_job(self, app_name, job_config):
+    def submit_job(self, app_name: str, job_config: str) -> str:
+        """
+        Submit a job that will run a process using the Science Processing Service (SPS).
+        :param app_name: The name of the application that this job is executing.
+        :param job_config: A json formatted string specifying details about this job.
+        :return: The job-id if the job is successfully submitted.
+        """
 
         headers = {
             'Content-type': 'application/json'
@@ -50,7 +67,13 @@ class Unity(object):
 
         return job_id
 
-    def get_job_status(self, app_name, job_id):
+    def get_job_status(self, app_name: str, job_id: str) -> str:
+        """
+        Get the status of a job that was submitted to the Science Processing System (SPS)
+        :param app_name: The name of the application that this job is executing.
+        :param job_id: The job-id of the job for which the status is being requested
+        :return: The status of the job
+        """
 
         try:
 
