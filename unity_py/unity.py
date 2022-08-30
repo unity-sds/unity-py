@@ -33,15 +33,14 @@ class Unity(object):
         }
 
         try:
-            sps_endpoint = get_config(self._config, 'jobs', 'sps_wpst_domain')
-            job_url = sps_endpoint + "/processes/{}/jobs".format(app_name)
+            job_url = get_config(self._config, 'jobs', 'sps_job_submission_endpoint').format(app_name)
             r = requests.post(job_url, headers=headers, json=job_config)
 
             job_location = r.headers['location']
 
             # Hack to remove localhost domain/port until this can be updated in the WPST API
             if "http://127.0.0.1:5000" in job_location:
-                job_location = job_location.replace("http://127.0.0.1:5000", sps_endpoint)
+                job_location = job_location.replace("http://127.0.0.1:5000", get_config(self._config,'jobs','sps_wpst_domain'))
 
             job_id = job_location.replace(job_url + "/", "")
 
