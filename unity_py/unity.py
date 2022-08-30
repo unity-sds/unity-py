@@ -1,6 +1,6 @@
 import os
 import requests
-from configparser import ConfigParser
+from configparser import ConfigParser, ExtendedInterpolation
 
 DEFAULT_CONFIG = os.path.dirname(os.path.realpath(__file__)) + "/unity.cfg"
 
@@ -51,9 +51,23 @@ class Unity(object):
 
         return job_id
 
+    def get_job_status(self, app_name, job_id):
+
+        try:
+
+            job_status_url = get_config(self._config, 'jobs', 'sps_job_status_endpoint').format(app_name, job_id)
+            response = requests.get(job_status_url)
+            job_status = response.json()['status']
+
+        except requests.exceptions.HTTPError as e:
+            # Add Logging Mechanism
+            raise
+
+        return job_status
+
 
 def read_config(config_files):
-    config = ConfigParser()
+    config = ConfigParser(interpolation=ExtendedInterpolation())
 
     for config_file in config_files:
         if config_file is not None:
