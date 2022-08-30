@@ -7,14 +7,14 @@ DEFAULT_CONFIG = os.path.dirname(os.path.realpath(__file__)) + "/unity.cfg"
 
 class Unity(object):
 
-    def __init__(self, user_config=None):
+    def __init__(self, config_file: str = None):
 
         # Read Unity Configuration Settings, if a user_config exists, any settings
         # specified in it will take precedence over the respective settings in the
         # default config
-        self._config = read_config([
+        self._config = _read_config([
             os.path.dirname(os.path.realpath(__file__)) + "/unity.cfg",
-            user_config,
+            config_file,
         ])
 
     def __str__(self):
@@ -33,7 +33,7 @@ class Unity(object):
         }
 
         try:
-            job_url = get_config(self._config, 'jobs', 'sps_job_submission_endpoint').format(app_name)
+            job_url = _get_config(self._config, 'jobs', 'sps_job_submission_endpoint').format(app_name)
             r = requests.post(job_url, headers=headers, json=job_config)
 
             job_location = r.headers['location']
@@ -54,7 +54,7 @@ class Unity(object):
 
         try:
 
-            job_status_url = get_config(self._config, 'jobs', 'sps_job_status_endpoint').format(app_name, job_id)
+            job_status_url = _get_config(self._config, 'jobs', 'sps_job_status_endpoint').format(app_name, job_id)
             response = requests.get(job_status_url)
             job_status = response.json()['status']
 
@@ -65,7 +65,7 @@ class Unity(object):
         return job_status
 
 
-def read_config(config_files):
+def _read_config(config_files):
     config = ConfigParser(interpolation=ExtendedInterpolation())
 
     for config_file in config_files:
@@ -76,5 +76,5 @@ def read_config(config_files):
     return config
 
 
-def get_config(config, section, setting):
+def _get_config(config, section, setting):
     return config.get(section.upper(), setting)
