@@ -9,6 +9,15 @@ class Unity(object):
     def __init__(self, user_config=None):
         self._config = read_config([DEFAULT_CONFIG, user_config])
 
+    def __str__(self):
+        response = "UNITY CONFIGURATION"
+        response = response + "\n\n" + len(response) * "-" + "\n\n"
+
+        for section in self._config.sections():
+            response = response + "{}:{}\n".format(section, dict(self._config[section]))
+
+        return response
+
 
 def read_config(config_files):
     config = ConfigParser()
