@@ -7,7 +7,14 @@ DEFAULT_CONFIG = os.path.dirname(os.path.realpath(__file__)) + "/unity.cfg"
 class Unity(object):
 
     def __init__(self, user_config=None):
-        self._config = read_config([DEFAULT_CONFIG, user_config])
+
+        # Read Unity Configuration Settings, if a user_config exists, any settings
+        # specified in it will take precedence over the respective settings in the
+        # default config
+        self._config = read_config([
+            os.path.dirname(os.path.realpath(__file__)) + "/unity.cfg",
+            user_config,
+        ])
 
     def __str__(self):
         response = "UNITY CONFIGURATION"
