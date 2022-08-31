@@ -57,7 +57,10 @@ class Unity(object):
 
             # Hack to remove localhost domain/port until this can be updated in the WPST API
             if "http://127.0.0.1:5000" in job_location:
-                job_location = job_location.replace("http://127.0.0.1:5000", _get_config(self._config, 'jobs', 'sps_wpst_domain'))
+                job_location = job_location.replace(
+                    "http://127.0.0.1:5000",
+                    _get_config(self._config, 'jobs', 'sps_wpst_domain')
+                )
 
             job_id = job_location.replace(job_url + "/", "")
 
