@@ -2,7 +2,6 @@ import os
 import requests
 from configparser import ConfigParser, ExtendedInterpolation
 
-DEFAULT_CONFIG = os.path.dirname(os.path.realpath(__file__)) + "/unity.cfg"
 
 
 class Unity(object):
