@@ -1,7 +1,35 @@
 import os
 import requests
 from configparser import ConfigParser, ExtendedInterpolation
+from unity_py.data_manager import DataManager
+from unity_py.unity_session import UnitySession
+from unity_py.unity_exception import UnityException
 
+class Session(object):
+    """
+    Session is a user can create services and resources. Basic shared configuration items
+    are also saved here. This wraps an underlying unity_session.Session object, which
+    is passed to different services and resources as needed.
+    """
+
+    def __init__(self, environment: str = "test"):
+        """
+        :param environment: the defualt environment for a session to work with. Defaults to 'TEST' unity environment.
+        """
+        env = environment
+        config = _read_config([
+            os.path.dirname(os.path.realpath(__file__)) + "/unity."+env+".cfg",
+        ])
+        self._session = UnitySession(env, config)
+
+    def client(self, service_name: str):
+        """
+        :param resource - the desired service, such as DataManager, JobManager, ApplicationManager.
+        """
+        if service_name == "DataManager":
+            return DataManager(session=self._session)
+        else:
+            raise UnityException("Invalid service name: " + service_name)
 
 
 class Unity(object):
