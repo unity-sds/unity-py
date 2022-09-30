@@ -5,7 +5,8 @@ from unity_py.resources.collection import Collection
 from unity_py.resources.dataset import Dataset
 from unity_py.resources.data_file import DataFile
 
-class DataManager:
+
+class DataManager(object):
     """
     The DataManager class is a wrapper to the data endpoint(s) within Unity. This wrapper interfaces with the DAPA endpoints.
 

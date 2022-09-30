@@ -3,7 +3,8 @@ import getpass
 import json
 import requests
 
-class UnitySession():
+
+class UnitySession(object):
     """
     passable session object containing configuration, auth objectes, and environment.
     """
@@ -61,7 +62,7 @@ class UnitySession():
         return self._auth
 
 
-class UnityAuth:
+class UnityAuth(object):
     """
     Unity Auth object for handling cognito authentication on behalf of all service wrappers.
     """
