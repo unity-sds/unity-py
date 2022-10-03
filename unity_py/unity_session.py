@@ -23,7 +23,7 @@ class UnitySession(object):
         Returns
         -------
         class
-            Class delcaration, returns the initialize UnitySession class.
+            Class declaration, returns the initialized UnitySession class.
 
         """
         self._env = env
@@ -31,7 +31,6 @@ class UnitySession(object):
 
         # set up unity authentication
         self._auth = UnityAuth(self._config.get("DEFAULT", "client_id"), self._config.get("DEFAULT", "auth_endpoint"))
-
 
     def get_service_endpoint(self, section, setting):
         """convenience method for getting a configured item from the included configuration.
@@ -84,8 +83,8 @@ class UnityAuth(object):
       }'''
 
     def __init__(self, client_id, auth_endpoint):
-        """initalize the Unity Auth class. The initialixation looks for username/passwords in the following locations:
-        1. The UNITY_USER and UNITY_PASSWROD environment variables.
+        """initialize the Unity Auth class. The initialization looks for username/passwords in the following locations:
+        1. The UNITY_USER and UNITY_PASSWORD environment variables.
         2. Prompt a user if no any of the previous fail
 
         Parameters
@@ -98,7 +97,7 @@ class UnityAuth(object):
         Returns
         -------
         UnityAuth
-            The unityAuth object whihc allows access to a token
+            The unityAuth object which allows access to a token
 
         """
         self._client_id = client_id
@@ -116,7 +115,6 @@ class UnityAuth(object):
             self._user = username
             self._password = password
 
-
     def get_token(self):
         """Public convenience method for getting a token. This begins the
         process of returning an already created token or will create a new token if necessary
@@ -132,7 +130,6 @@ class UnityAuth(object):
             self._get_unity_token()
 
         return self._token
-
 
     def _is_expired(expiration_date):
         """Convenience method for checking if a token is expired. static method
@@ -151,7 +148,7 @@ class UnityAuth(object):
         if expiration_date is None:
             return True
         else:
-            #TODO
+            # TODO
             return False
 
     def _get_unity_token(self):
