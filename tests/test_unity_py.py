@@ -1,4 +1,4 @@
-from unity_py.unity import Unity, Session
+from unity_py.unity import Unity
 
 import pytest
 
