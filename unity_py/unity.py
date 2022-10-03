@@ -1,6 +1,6 @@
 import os
 from configparser import ConfigParser, ExtendedInterpolation
-from unity_py.data_service import DataService
+from unity_py.services.data_service import DataService
 from unity_py.unity_session import UnitySession
 from unity_py.unity_exception import UnityException
 from unity_py.unity_environments import UnityEnvironments
