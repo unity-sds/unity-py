@@ -19,7 +19,7 @@ class Unity(object):
         """
         env = environment
         config = _read_config([
-            os.path.dirname(os.path.realpath(__file__)) + "/unity.{}.cfg".format(env.value)
+            os.path.dirname(os.path.realpath(__file__)) + "/envs/unity.{}.cfg".format(env.value)
         ])
         self._session = UnitySession(env, config)
 
