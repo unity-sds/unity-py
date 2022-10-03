@@ -3,12 +3,14 @@ import getpass
 import json
 import requests
 
+from unity_py.unity_environments import UnityEnvironments
+
 
 class UnitySession(object):
     """
     passable session object containing configuration, auth objectes, and environment.
     """
-    def __init__(self, env, config):
+    def __init__(self, env: UnityEnvironments, config):
         """initialize the unitySession object which holds configuration and auth objects.
 
         Parameters

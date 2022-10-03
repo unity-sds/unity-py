@@ -3,6 +3,7 @@ from configparser import ConfigParser, ExtendedInterpolation
 from unity_py.data_manager import DataManager
 from unity_py.unity_session import UnitySession
 from unity_py.unity_exception import UnityException
+from unity_py.unity_environments import UnityEnvironments
 
 
 class Unity(object):
@@ -12,13 +13,13 @@ class Unity(object):
     is passed to different services and resources as needed.
     """
 
-    def __init__(self, environment: str = "test"):
+    def __init__(self, environment: UnityEnvironments = UnityEnvironments.TEST):
         """
         :param environment: the default environment for a session to work with. Defaults to 'TEST' unity environment.
         """
         env = environment
         config = _read_config([
-            os.path.dirname(os.path.realpath(__file__)) + "/unity."+env+".cfg",
+            os.path.dirname(os.path.realpath(__file__)) + "/unity.{}.cfg".format(env.value)
         ])
         self._session = UnitySession(env, config)
 
