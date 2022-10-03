@@ -6,11 +6,11 @@ from unity_py.resources.dataset import Dataset
 from unity_py.resources.data_file import DataFile
 
 
-class DataManager(object):
+class DataService(object):
     """
-    The DataManager class is a wrapper to the data endpoint(s) within Unity. This wrapper interfaces with the DAPA endpoints.
+    The DataService class is a wrapper to the data endpoint(s) within Unity. This wrapper interfaces with the DAPA endpoints.
 
-    The DataManager class allows for the querying of data collections and data files within those collections.
+    The DataService class allows for the querying of data collections and data files within those collections.
     """
 
     def __init__(
@@ -18,21 +18,21 @@ class DataManager(object):
         session: UnitySession,
         endpoint: str = None,
     ):
-        """Initialize the DataManager class.
+        """Initialize the DataService class.
 
         Parameters
         ----------
         session : UnitySession
             Description of parameter `session`.
         endpoint : str
-            The endpoint used to access teh data manager API. This is usually
-            shared across Unity Environments, but can be Overidden. Defaults to
+            The endpoint used to access teh data service API. This is usually
+            shared across Unity Environments, but can be overridden. Defaults to
             "None", and will be read form the configuration if not set.
 
         Returns
         -------
-        DataManager
-            the Data Manager object.
+        DataService
+            the Data Service object.
 
         """
         self._session = session
@@ -70,6 +70,5 @@ class DataManager(object):
             ds.add_data_file(DataFile("data" ,dataset['assets']['data']['href']))
             ds.add_data_file(DataFile("metadata" ,dataset['assets']['metadata__data']['href']))
             datasets.append(ds)
-
 
         return datasets

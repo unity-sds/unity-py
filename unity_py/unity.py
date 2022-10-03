@@ -1,9 +1,10 @@
 import os
 from configparser import ConfigParser, ExtendedInterpolation
-from unity_py.data_manager import DataManager
+from unity_py.data_service import DataService
 from unity_py.unity_session import UnitySession
 from unity_py.unity_exception import UnityException
 from unity_py.unity_environments import UnityEnvironments
+from unity_py.unity_services import UnityServices
 
 
 class Unity(object):
@@ -23,12 +24,12 @@ class Unity(object):
         ])
         self._session = UnitySession(env, config)
 
-    def client(self, service_name: str):
+    def client(self, service_name: UnityServices):
         """
-        :param service_name - the desired service, such as DataManager, JobManager, ApplicationManager.
+        :param service_name - the desired service, such as UnityServices.DATA_SERVICE, UnityServices.JOB_SERVICE, UnityServices.APPLICATION_SERVICE.
         """
-        if service_name == "DataManager":
-            return DataManager(session=self._session)
+        if service_name.value == UnityServices.DATA_SERVICE:
+            return DataService(session=self._session)
         else:
             raise UnityException("Invalid service name: " + service_name)
 
