@@ -26,7 +26,7 @@ class Unity(object):
 
     def client(self, service_name: UnityServices):
         """
-        :param service_name - the desired service, such as UnityServices.DATA_SERVICE, UnityServices.JOB_SERVICE, UnityServices.APPLICATION_SERVICE.
+        :param service_name - the desired service, such as UnityServices.APPLICATION_SERVICE, UnityServices.DATA_SERVICE, or UnityServices.JOB_SERVICE.
         """
         if service_name.value == UnityServices.DATA_SERVICE:
             return DataService(session=self._session)
