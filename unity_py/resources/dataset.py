@@ -26,7 +26,7 @@ class Dataset(object):
         end_time : type
             end time of the data coverage within the dataset
         creation_time : type
-            The time a daset was created
+            The time a dataset was created
 
         Returns
         -------
