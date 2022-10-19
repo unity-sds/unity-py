@@ -28,10 +28,10 @@ class Unity(object):
         """
         :param service_name - the desired service, such as UnityServices.APPLICATION_SERVICE, UnityServices.DATA_SERVICE, or UnityServices.JOB_SERVICE.
         """
-        if service_name.value == UnityServices.DATA_SERVICE:
+        if service_name == UnityServices.DATA_SERVICE:
             return DataService(session=self._session)
         else:
-            raise UnityException("Invalid service name: " + service_name)
+            raise UnityException("Invalid service name: " + str(service_name))
 
 
 def _read_config(config_files):
