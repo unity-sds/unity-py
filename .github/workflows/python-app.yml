@@ -40,11 +40,13 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+      env:
+        UNITY_USER: '${{ secrets.UNITY_TEST_USER }}'
+        UNITY_PASSWORD: '${{ secrets.UNITY_TEST_PASSWORD }}'
       run: |
         poetry run pytest -m "not regression"
     - name: Regression Test with pytest
       env:
-        PODAAC_LOGLEVEL: "DEBUG"
         UNITY_USER: '${{ secrets.UNITY_TEST_USER }}'
         UNITY_PASSWORD: '${{ secrets.UNITY_TEST_PASSWORD }}'
       run: |
