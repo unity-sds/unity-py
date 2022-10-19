@@ -24,9 +24,9 @@ class DataService(object):
         session : UnitySession
             Description of parameter `session`.
         endpoint : str
-            The endpoint used to access teh data service API. This is usually
+            The endpoint used to access the data service API. This is usually
             shared across Unity Environments, but can be overridden. Defaults to
-            "None", and will be read form the configuration if not set.
+            "None", and will be read from the configuration if not set.
 
         Returns
         -------
