@@ -45,5 +45,7 @@ jobs:
     - name: Regression Test with pytest
       env:
         PODAAC_LOGLEVEL: "DEBUG"
+        UNITY_USER: '${{ secrets.UNITY_TEST_USER }}'
+        UNITY_PASSWORD: '${{ secrets.UNITY_TEST_PASSWORD }}'
       run: |
         poetry run pytest -o log_cli=true --log-cli-level=DEBUG -m "regression"
