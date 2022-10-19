@@ -47,7 +47,7 @@ class Dataset(object):
         Parameters
         ----------
         datafile : DataFile
-            a uity_py.resource.datafile object containg the location of data products.
+            a unity_py.resource.datafile object containing the location of data products.
 
         """
         self.datafiles.append(datafile)
