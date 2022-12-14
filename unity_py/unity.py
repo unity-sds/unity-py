@@ -1,6 +1,7 @@
 import os
 from configparser import ConfigParser, ExtendedInterpolation
 from unity_py.services.data_service import DataService
+from unity_py.services.job_service import JobService
 from unity_py.unity_session import UnitySession
 from unity_py.unity_exception import UnityException
 from unity_py.unity_environments import UnityEnvironments
@@ -30,6 +31,8 @@ class Unity(object):
         """
         if service_name == UnityServices.DATA_SERVICE:
             return DataService(session=self._session)
+        elif service_name == UnityServices.JOB_SERVICE:
+            return JobService(session=self._session)
         else:
             raise UnityException("Invalid service name: " + str(service_name))
 
