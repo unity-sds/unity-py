@@ -36,6 +36,18 @@ class Unity(object):
         else:
             raise UnityException("Invalid service name: " + str(service_name))
 
+    def __str__(self):
+        response = "UNITY CONFIGURATION"
+        response = response + "\n\n" + len(response) * "-" + "\n"
+        
+        config = self._session.get_config()
+        config_sections = config.sections()
+        for section in config_sections:
+            response = response + "\n{}\n".format(section)
+            for setting in dict(config[section]):
+                response = response + "{}: {}\n".format(setting, dict(config[section])[setting])
+
+        return response
 
 def _read_config(config_files):
     config = ConfigParser(interpolation=ExtendedInterpolation())

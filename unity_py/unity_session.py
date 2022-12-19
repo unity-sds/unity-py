@@ -3,6 +3,7 @@ import getpass
 import json
 import requests
 
+from configparser import ConfigParser
 from unity_py.unity_environments import UnityEnvironments
 
 
@@ -10,7 +11,7 @@ class UnitySession(object):
     """
     passable session object containing configuration, auth objects, and environment.
     """
-    def __init__(self, env: UnityEnvironments, config):
+    def __init__(self, env: UnityEnvironments, config: ConfigParser):
         """initialize the unitySession object which holds configuration and auth objects.
 
         Parameters
@@ -61,6 +62,16 @@ class UnitySession(object):
 
         """
         return self._auth
+
+    def get_config(self):
+        """Returns the configuration being used by the session
+
+        Returns
+        -------
+        Config
+            The configuration object which contains configuration information used for api calls.
+        """
+        return self._config
 
 
 class UnityAuth(object):
