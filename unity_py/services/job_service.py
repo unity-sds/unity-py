@@ -1,5 +1,6 @@
 import requests
 from unity_py.unity_session import UnitySession
+from unity_py.utils.http import get_headers
 
 
 class JobService(object):
@@ -11,7 +12,8 @@ class JobService(object):
 
     def __init__(
         self,
-        session: UnitySession
+        session: UnitySession,
+        endpoint: str = None
     ):
         """
         Initialize the JobService class.
@@ -23,7 +25,23 @@ class JobService(object):
 
         Returns
         -------
-        JobSertvice
+        JobService
             The Job Service object.
         """
         self._session = session
+        if endpoint is None:
+            self.endpoint = self._session.get_service_endpoint("jobs", "sps_processes")
+
+    def get_processes(self):
+        """
+        Returns a list of processes already deployed within SPS
+        """
+    
+        url = self.endpoint
+        token = self._session.get_auth().get_token()
+        headers = get_headers(token)
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        json_result = response.json()['processes']
+        
+        return json_result
