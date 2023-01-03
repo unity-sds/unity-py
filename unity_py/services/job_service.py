@@ -65,3 +65,14 @@ class JobService(object):
         job_id = job_location.replace(url + "/","")
 
         return job_id
+
+    def get_job_status(self, app_name, job_id):
+
+        token = self._session.get_auth().get_token()
+        headers = get_headers(token)
+        url = self.endpoint + "processes/{}/jobs/{}".format(app_name, job_id)
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        job_status = response.json()['status']
+
+        return job_status
