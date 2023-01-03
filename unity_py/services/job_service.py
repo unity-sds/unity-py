@@ -47,3 +47,21 @@ class JobService(object):
         json_result = response.json()['processes']
 
         return json_result
+ 
+    def submit_job(self, app_name, data):
+
+        token = self._session.get_auth().get_token()
+        headers = get_headers(token, {
+            'Content-type': 'application/json'
+        })
+        url = self.endpoint + "processes/{}/jobs".format(app_name)
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+
+        # Parse the job_id from the returned 'location' header
+        job_location = response.headers['location']
+        if "http://127.0.0.1:5000" in job_location:
+            job_location = job_location.replace("http://127.0.0.1:5000/",self.endpoint)
+        job_id = job_location.replace(url + "/","")
+
+        return job_id
