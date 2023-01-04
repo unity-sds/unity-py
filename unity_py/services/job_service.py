@@ -77,11 +77,11 @@ class JobService(object):
 
         return job_status
 
-    def get_job_results(self, app_name, job_id):
+    def get_job_result(self, app_name, job_id):
     
         token = self._session.get_auth().get_token()
         headers = get_headers(token)
-        url = self.endpoint + "/processes/{}/jobs/{}".format(app_name, job_id)
+        url = self.endpoint + "/processes/{}/jobs/{}/result".format(app_name, job_id)
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         json_result = response.json()
