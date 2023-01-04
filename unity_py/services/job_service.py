@@ -87,3 +87,14 @@ class JobService(object):
         json_result = response.json()
         
         return json_result
+
+    def get_jobs_for_app(self, app_name):
+    
+        token = self._session.get_auth().get_token()
+        headers = get_headers(token)
+        job_url = self.endpoint + "/processes/{}/jobs".format(app_name)
+        response = requests.get(job_url, headers=headers)
+        response.raise_for_status()
+        json_result = response.json()['jobs']
+
+        return json_result
