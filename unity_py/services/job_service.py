@@ -61,7 +61,7 @@ class JobService(object):
         # Parse the job_id from the returned 'location' header
         job_location = response.headers['location']
         if "http://127.0.0.1:5000" in job_location:
-            job_location = job_location.replace("http://127.0.0.1:5000/",self.endpoint)
+            job_location = job_location.replace("http://127.0.0.1:5000/", self.endpoint)
         job_id = job_location.replace(url + "/","")
 
         return job_id
@@ -97,4 +97,15 @@ class JobService(object):
         response.raise_for_status()
         json_result = response.json()['jobs']
 
+        return json_result
+
+    def dismiss_job(self, app_name, job_id):
+    
+        token = self._session.get_auth().get_token()
+        headers = get_headers(token)
+        job_url = self.endpoint + "/processes/{}/jobs/{}".format(app_name, job_id)
+        response = requests.delete(job_url, headers=headers)
+        response.raise_for_status()
+        json_result = response.json()['statusInfo']
+        
         return json_result
