@@ -1,7 +1,7 @@
 """
-This module contains utility functions to support calls made using HTTP.
+This module contains utility functions to support HTTP calls.
 """
-@staticmethod
+
 def get_headers(token, additional_headers = None):
     """Returns a dictionary containing headers that will be used in an API call"""
 
