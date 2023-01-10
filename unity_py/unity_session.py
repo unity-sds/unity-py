@@ -121,8 +121,8 @@ class UnityAuth(object):
         self._password = os.getenv('UNITY_PASSWORD', None)
 
         if None in [self._user, self._password]:
-            username = input('What is your name?\n')
-            password = getpass.getpass("Please enter your Unity Password: ")
+            username = input('Please enter your Unity username: ')
+            password = getpass.getpass("Please enter your Unity password: ")
             self._user = username
             self._password = password
 
