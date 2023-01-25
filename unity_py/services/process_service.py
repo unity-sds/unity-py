@@ -1,6 +1,7 @@
 import requests
 from unity_py.unity_session import UnitySession
 from unity_py.resources.process import Process
+from unity_py.resources.job import Job
 from unity_py.utils.http import get_headers
 
 class ProcessService(object):
@@ -63,3 +64,27 @@ class ProcessService(object):
             )
 
         return processes
+    
+    
+    def get_jobs(self, process:Process):
+    
+        token = self._session.get_auth().get_token()
+        headers = get_headers(token)
+        job_url = self.endpoint + "processes/{}/jobs".format(process.id)
+        response = requests.get(job_url, headers=headers)
+        response.raise_for_status()
+
+        jobs = []
+        for item in response.json()['jobs']:
+            jobs.append(
+                Job(
+                    self._session,
+                    self.endpoint,
+                    process,
+                    item['jobID'],
+                    item['status'],
+                    item['inputs']
+                )
+            )
+
+        return jobs

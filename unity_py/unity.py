@@ -1,7 +1,6 @@
 import os
 from configparser import ConfigParser, ExtendedInterpolation
 from unity_py.services.data_service import DataService
-from unity_py.services.job_service import JobService
 from unity_py.services.process_service import ProcessService
 from unity_py.unity_session import UnitySession
 from unity_py.unity_exception import UnityException
@@ -28,12 +27,10 @@ class Unity(object):
 
     def client(self, service_name: UnityServices):
         """
-        :param service_name - the desired service, such as UnityServices.APPLICATION_SERVICE, UnityServices.DATA_SERVICE, or UnityServices.JOB_SERVICE.
+        :param service_name - the desired service, such as UnityServices.APPLICATION_SERVICE, UnityServices.DATA_SERVICE, or UnityServices.PROCESS_SERVICE.
         """
         if service_name == UnityServices.DATA_SERVICE:
             return DataService(session=self._session)
-        elif service_name == UnityServices.JOB_SERVICE:
-            return JobService(session=self._session)
         elif service_name == UnityServices.PROCESS_SERVICE:
             return ProcessService(session=self._session)
         else:
