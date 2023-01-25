@@ -55,7 +55,7 @@ class Job(object):
     
         token = self._session.get_auth().get_token()
         headers = get_headers(token)
-        url = self._endpoint + "/processes/{}/jobs/{}/result".format(self._process.id, self.id)
+        url = self._endpoint + "processes/{}/jobs/{}/result".format(self._process.id, self.id)
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         json_result = response.json()
@@ -66,7 +66,7 @@ class Job(object):
     
         token = self._session.get_auth().get_token()
         headers = get_headers(token)
-        job_url = self._endpoint + "/processes/{}/jobs/{}".format(self._process.id, self.id)
+        job_url = self._endpoint + "processes/{}/jobs/{}".format(self._process.id, self.id)
         response = requests.delete(job_url, headers=headers)
         response.raise_for_status()
         json_result = response.json()['statusInfo']
