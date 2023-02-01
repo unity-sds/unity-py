@@ -35,15 +35,14 @@ class ProcessService(object):
         if endpoint is None:
             self.endpoint = self._session.get_service_endpoint("sps", "sps_endpoint")
 
-
     def get_processes(self) -> List[Process]:
         """
         Returns a list of processes already deployed within SPS
         """
 
-        url = self.endpoint + "processes"
         token = self._session.get_auth().get_token()
         headers = get_headers(token)
+        url = self.endpoint + "processes"
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         processes = []
@@ -66,6 +65,35 @@ class ProcessService(object):
             )
 
         return processes
+    
+    
+    def get_process(self, process_id:str) -> Process:
+        """
+        Returns a list of processes already deployed within SPS
+        """
+
+        token = self._session.get_auth().get_token()
+        headers = get_headers(token)
+        url = self.endpoint + "processes/{}".format(process_id)
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        process_json = response.json()['process']
+        process = Process(
+            self._session,
+            self.endpoint,
+            process_json['id'],
+            process_json['title'],
+            process_json['abstract'],
+            process_json['executionUnit'],
+            process_json['immediateDeployment'],
+            process_json['jobControlOptions'],
+            process_json['keywords'],
+            process_json['outputTransmission'],
+            process_json['owsContextURL'],
+            process_json['processVersion']
+        )
+
+        return process
     
     
     def get_jobs(self, process:Process):
