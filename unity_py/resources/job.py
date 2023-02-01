@@ -19,7 +19,7 @@ class Job(object):
     inputs={}
 )'''.format(
     self.id,
-    self.status.value,
+    self.status.value if self.status else "",
     self.inputs
 )
 
