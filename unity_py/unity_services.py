@@ -8,4 +8,4 @@ class UnityServices(Enum):
 
     DATA_SERVICE = "data_service"
     APPLICATION_SERVICE = "app_service"
-    JOB_SERVICE = "job_service"
+    PROCESS_SERVICE = "process_service"
