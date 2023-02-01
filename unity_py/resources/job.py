@@ -1,6 +1,14 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 import requests
+
 from unity_py.unity_session import UnitySession
+from unity_py.resources.job_status import JobStatus
 from unity_py.utils.http import get_headers
+
+if TYPE_CHECKING:
+    from unity_py.resources.process import Process
+
 
 class Job(object):
 
@@ -15,7 +23,7 @@ class Job(object):
     self.inputs
 )
 
-    def __init__(self, session, endpoint, process, id, status = None, inputs = None):
+    def __init__(self, session: UnitySession, endpoint:str, process:Process, id:int, status:JobStatus = None, inputs:object = None):
         """
         Initialize the Job class.
 
@@ -25,6 +33,14 @@ class Job(object):
             The Unity Session that will be used to facilitate making calls to the SPS endpoints.
         endpoint : str
             The endpoint to call for SPS.
+        process : Process
+            The process associated with this Job
+        id : int
+            The identifier associated with this Job
+        status : JobStatus
+            The status of this job
+        inputs : object
+            The input data used for this job
 
         Returns
         -------

@@ -1,4 +1,6 @@
 import requests
+from typing import List
+
 from unity_py.unity_session import UnitySession
 from unity_py.resources.process import Process
 from unity_py.resources.job import Job
@@ -11,8 +13,8 @@ class ProcessService(object):
 
     def __init__(
         self,
-        session: UnitySession,
-        endpoint: str = None
+        session:UnitySession,
+        endpoint:str = None
     ):
         """
         Initialize the ProcessService class.
@@ -34,7 +36,7 @@ class ProcessService(object):
             self.endpoint = self._session.get_service_endpoint("sps", "sps_endpoint")
 
 
-    def get_processes(self):
+    def get_processes(self) -> List[Process]:
         """
         Returns a list of processes already deployed within SPS
         """

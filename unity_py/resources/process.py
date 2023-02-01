@@ -32,18 +32,18 @@ class Process(object):
 
     def __init__(
         self,
-        session: UnitySession,
-        endpoint,
-        id,
-        title,
-        abstract,
-        execution_unit,
-        immediate_deployment,
-        job_control_options,
-        keywords,
-        output_transmission,
-        ows_context_url,
-        process_version
+        session:UnitySession,
+        endpoint:str,
+        id:str,
+        title:str,
+        abstract:str,
+        execution_unit:str,
+        immediate_deployment:bool,
+        job_control_options:list,
+        keywords:str,
+        output_transmission:list,
+        ows_context_url:str,
+        process_version:str
     ):
         """
         Initialize the Process class.
@@ -75,7 +75,7 @@ class Process(object):
         self.ows_context_url = ows_context_url
         self.process_version = process_version
 
-    def execute(self, data):
+    def execute(self, data) -> Job:
 
         token = self._session.get_auth().get_token()
         headers = get_headers(token, {
