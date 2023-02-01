@@ -19,7 +19,7 @@ class Job(object):
     inputs={}
 )'''.format(
     self.id,
-    self.status,
+    self.status.value,
     self.inputs
 )
 
@@ -63,7 +63,7 @@ class Job(object):
         url = self._endpoint + "processes/{}/jobs/{}".format(self._process.id, self.id)
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        self._status = response.json()['status']
+        self._status = JobStatus(response.json()['status'])
 
         return self._status
 

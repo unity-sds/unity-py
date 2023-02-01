@@ -3,7 +3,7 @@ from typing import List
 
 from unity_py.unity_session import UnitySession
 from unity_py.resources.process import Process
-from unity_py.resources.job import Job
+from unity_py.resources.job import Job, JobStatus
 from unity_py.utils.http import get_headers
 
 class ProcessService(object):
@@ -84,7 +84,7 @@ class ProcessService(object):
                     self.endpoint,
                     process,
                     item['jobID'],
-                    item['status'],
+                    JobStatus(item['status']),
                     item['inputs']
                 )
             )
