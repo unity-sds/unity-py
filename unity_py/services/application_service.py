@@ -20,13 +20,17 @@ class HostedWorkflowError(Exception):
     pass
 
 
+# String values that define workflow types
+CWL_VALUE = "CWL"
+
+
 class WorkflowType(Enum):
     """
     Encapsulates the types of workflows that Unity supports. This may be a subset of
     what the application catalog supports.
     """
 
-    CWL = "CWL"
+    CWL = CWL_VALUE
 
 
 #
@@ -42,12 +46,12 @@ class WorkflowType(Enum):
 
 # File type for the workflow parameter file
 DockstoreFileType = {
-    'CWL': 'DOCKSTORE_CWL'
+    CWL_VALUE: 'DOCKSTORE_CWL'
 }
 
 # File type for the JSON format file based on the workflow type
 DockstoreJSONFileType = {
-    'CWL': 'CWL_TEST_JSON'
+    CWL_VALUE: 'CWL_TEST_JSON'
 }
 
 
@@ -72,7 +76,7 @@ class ApplicationPackage(object):
 
     @workflow_type.default
     def check_workflow_default(self):
-        return "CWL"
+        return CWL_VALUE
 
     @workflow_type.validator
     def check_workflow_type(self, attribute, value):
@@ -124,6 +128,7 @@ class ApplicationCatalog(ABC):
     def unpublish(self, application):
         "Unpublish an ApplicationPackage object into the catalog"
         pass
+
 
 class DockstoreSourceMethod(Enum):
     """
@@ -222,11 +227,11 @@ class DockstoreAppCatalog(ApplicationCatalog):
 
         return response
 
-    def _publish(self, application, publish: bool = True):
+    def _publish(self, app_id, publish: bool = True):
         """
         Publish or unpublish the worksflow based on the "publish" input parameter value.
         """
-        return self._post(f"/workflows/{application.id}/publish", data={"publish": publish})
+        return self._post(f"/workflows/{app_id}/publish", data={"publish": publish})
 
     @cached_property
     def _user_info(self):
@@ -317,36 +322,42 @@ class DockstoreAppCatalog(ApplicationCatalog):
 
         return app_list
 
-    def register(self, application, cwl_files: list = [], json_files: list = [], cwd: str = '.', publish: bool = True):
+    def register(
+        self,
+        app_name: str,
+        app_type: str = CWL_VALUE,
+        cwl_files: list = [],
+        json_files: list = [],
+        cwd: str = '.',
+        publish: bool = True
+    ):
         """
         Register new hosted workflow with the Dockstore, upload workflow parameter files and publish
         the workflow if requested.
 
         Inputs:
-        application: Application object to register with the Dockstore.
+        app_name: Application name to register within the Dockstore.
+        app_type: Type of the application. Default is 'CWL'.
         cwl_files: List of CWL format parameter file paths to upload to the Dockstore. Default is an empty list.
         json_files: List of JSON format parameter file paths to upload to the Dockstore. Default is an empty list.
         cwd: Base level directory that stores all CWL and JSON files to upload to the Dockstore. Default is '.'
              meaning the current directory. All "cwl_files" and "json_files" are relative to the "cwd" directory.
-        publish: Flag if registered workflow should be published within Dockstore. Default is True meaning that
-            application should be published once it's registered with the Dockstore.
+        publish: Flag if registered application should be published within the Dockstore. Default is True meaning that
+            application should be published once it's registered within the Dockstore.
         """
         # Set up request parameters for the Dockstore application as expected for
         # the hosted workflow
         params = {
-            'name': application.name,
-            'descriptorType': application.workflow_type,
+            'name': app_name,
+            'descriptorType': app_type,
         }
 
         request_url = "/workflows/hostedEntry"
 
         response = self._post(request_url, params)
 
-        # TODO: update "application" object with all extracted metadata from the Dockstore once registered?
+        # Dockstore ID of newly registered application
         new_app_id = response.json()['id']
-
-        # Add id to the ApplicationPackage object
-        application.id = new_app_id
 
         if len(cwl_files) or len(json_files):
             # Format contents of the parameter files for the request to upload all CWL and JSON files if any
@@ -362,7 +373,7 @@ class DockstoreAppCatalog(ApplicationCatalog):
                     params.append(
                         DockstoreAppCatalog._file_to_json(
                             each_path,
-                            DockstoreFileType[application.workflow_type]
+                            DockstoreFileType[app_type]
                         )
                     )
 
@@ -370,7 +381,7 @@ class DockstoreAppCatalog(ApplicationCatalog):
                     params.append(
                         DockstoreAppCatalog._file_to_json(
                             each_path,
-                            DockstoreJSONFileType[application.workflow_type]
+                            DockstoreJSONFileType[app_type]
                         )
                     )
 
@@ -378,27 +389,26 @@ class DockstoreAppCatalog(ApplicationCatalog):
                 # Change back to original directory
                 os.chdir(current_dir)
 
-            request_url = f"/workflows/hostedEntry/{application.id}"
+            request_url = f"/workflows/hostedEntry/{new_app_id}"
 
             #  Upload the files
             self._patch(request_url, params)
 
         # Optionally publish workflow: Dockstore allows to publish only workflows that have parameter files uploaded
         if publish:
-            print('Publishing the workflow')
             if len(cwl_files) or len(json_files):
-                self._publish(application, publish)
+                self._publish(new_app_id, publish)
 
             else:
-                raise HostedWorkflowError('Can not publish hosted workflow as no parameter files have been uploaded')
+                raise HostedWorkflowError('Can not publish hosted workflow (id={new_app_id}) as no parameter files have been uploaded')
 
-        # TODO: or should we just update existing "application" object with all Dockstore metadata instead of returning new
-        # object?
         return self.application(new_app_id)
 
     def uploadParameterFile(self, application, param_filename: str):
         """
         Upload local workflow parameter file "param_filename" to the hosted by Dockstore workflow.
+
+        To remove the file from the registered application just upload file of empy content to the Dockstore.
         """
         # Create JSON dictionary of parameters for the file
         params = [DockstoreAppCatalog._file_to_json(
@@ -414,6 +424,8 @@ class DockstoreAppCatalog(ApplicationCatalog):
     def uploadJSONFile(self, application, param_filename: str):
         """
         Upload local JSON file "param_filename" to the hosted by Dockstore workflow.
+
+        To remove the file from the registered application just upload file of empy content to the Dockstore.
         """
         # Create JSON dictionary of parameters for the file
         params = [DockstoreAppCatalog._file_to_json(
@@ -428,14 +440,15 @@ class DockstoreAppCatalog(ApplicationCatalog):
 
     def publish(self, application):
         """
-        Publish the worksflow
+        Publish the worksflow.
         """
-        self._publish(application, publish=True)
+        self._publish(application.id, publish=True)
 
     def unpublish(self, application):
         """
         Unpublish the worksflow.
-        Dockstore does not allow to delete hosted workflows, so we can only remove/add parameter files and
-        publish/unpublish hosted workflows.
+
+        Dockstore does not allow to delete a hosted workflow, so we can only remove/add parameter files and
+        publish/unpublish hosted workflows within Dockstore.
         """
-        self._publish(application, publish=False)
+        self._publish(application.id, publish=False)
