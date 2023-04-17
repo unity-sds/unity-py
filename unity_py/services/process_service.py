@@ -1,3 +1,4 @@
+import json
 import requests
 from typing import List
 
@@ -118,3 +119,15 @@ class ProcessService(object):
             )
 
         return jobs
+    
+    def deploy_process(self, data):
+
+        token = self._session.get_auth().get_token()
+        headers = get_headers(token, {
+            'Content-type': 'application/json'
+        })
+        url = self.endpoint + "processes"
+        response = requests.post(url, headers=headers, json=json.dumps(data))
+        response.raise_for_status()
+
+        return response
