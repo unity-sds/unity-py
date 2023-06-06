@@ -210,7 +210,8 @@ class DockstoreAppCatalog(ApplicationCatalog):
 
         response = requests.patch(f"{self.api_url}/{request_url}", headers=self._headers, data=json.dumps(data))
 
-        if response.status_code != 200:
+        # 204 indicates that no action was taken
+        if response.status_code != 200 and response.status_code != 204:
             raise ApplicationCatalogAccessError(f"PATCH operation to application catalog at {self.api_url}/{request_url} return unexpected status code: {response.status_code} with message: {response.content} using data: {data}")
 
         return response
