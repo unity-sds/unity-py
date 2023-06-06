@@ -252,21 +252,24 @@ class DockstoreAppCatalog(ApplicationCatalog):
         # after registry path
         name = json_dict['full_workflow_path'].split("/")[-1]
 
-        return DockstoreApplicationPackage(id=str(json_dict['id']),
-                                           name=name,
-                                           source_repository=json_dict['gitUrl'],
-                                           workflow_path=json_dict['workflow_path'],
-                                           is_published=json_dict['is_published'],
-                                           description=json_dict['description'],
-                                           dockstore_info=json_dict)
+        return DockstoreApplicationPackage(
+            id=str(json_dict['id']),
+            name=name,
+            source_repository=json_dict['gitUrl'],
+            workflow_path=json_dict['workflow_path'],
+            is_published=json_dict['is_published'],
+            description=json_dict['description'],
+            dockstore_info=json_dict
+        )
 
     @staticmethod
     def _file_to_json(file_path: str, dockstore_path: str, file_format: str):
         """
         Generate JSON format of the file representation for the Dockstore request.
 
-        file_path: Path to the file to create JSON format request representation for. If None or empty filepath
-            is provided, then "dockstore_path" file will be removed from the hosted workflow.
+        file_path: Path to the file to create JSON format request representation for.
+            If None or empty filepath is provided, then "dockstore_path" file will be
+            removed from the hosted workflow.
         dockstore_path: Path to the file in the Dockstore.
         file_format: Dockstore file type for the file.
         """
@@ -407,7 +410,7 @@ class DockstoreAppCatalog(ApplicationCatalog):
         }
 
         Inputs:
-        application: DockstoreApplicationPackage to upload files for.
+        application: DockstoreApplicationPackage to upload the files for.
         cwl_files: List of CWL format parameter file paths to upload to the Dockstore. Default is an empty list.
         json_files: List of JSON format parameter file paths to upload to the Dockstore. Default is an empty list.
         filename_map: Mapping of parameter filenames on local file system vs. filename path as to appear in
