@@ -3,7 +3,7 @@ class DataFile(object):
     """
 
     def __str__(self):
-        return f'unity_py.resources.DataFile(collection_id={self.collection_id})'
+        return f'unity_py.resources.DataFile(collection_id={self.location})'
 
     def __repr__(self):
         return self.__str__()

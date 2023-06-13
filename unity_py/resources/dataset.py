@@ -40,6 +40,7 @@ class Dataset(object):
         self.data_begin_time = start_time
         self.data_end_time = end_time
         self.data_create_time = creation_time
+        self.properties = {}
 
     def add_data_file(self, datafile: type=DataFile):
         """adds a data file to a dataset
@@ -51,3 +52,15 @@ class Dataset(object):
 
         """
         self.datafiles.append(datafile)
+
+    def add_property(self, key, value):
+        """adds a custom metadata property to a dataset
+
+        Parameters
+        ----------
+        key : String
+            The property name to be set
+        Value : Object
+            the property value to be set
+        """
+        self.properties.set(key,value)
