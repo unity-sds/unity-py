@@ -60,7 +60,6 @@ class Collection(object):
         catalog = Catalog(id=collection.collection_id, description="STAC Catalog")
         for dataset in collection._datasets:
             updated = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
-            print(dataset.data_begin_time)
             item = Item(
             id=dataset.id,
             geometry=dataset.geometry,
@@ -113,7 +112,8 @@ class Collection(object):
                 id = root_catalog.id
                 items = root_catalog.get_all_items()
             except STACTypeError as e:
-                print("Trying stac items...")
+                pass
+                # attempt to read as a feature collection
 
 
             # ItemCollection
