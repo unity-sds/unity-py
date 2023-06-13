@@ -63,8 +63,8 @@ class Collection(object):
             print(dataset.data_begin_time)
             item = Item(
             id=dataset.id,
-            geometry="",
-            bbox="",
+            geometry=dataset.geometry,
+            bbox=dataset.bbox,
             datetime = date_parser.parse(dataset.data_begin_time),
             properties={
                 "datetime": dataset.data_begin_time,
@@ -132,6 +132,8 @@ class Collection(object):
             # Catch file not found... ?
             for item in items:
                 ds = Dataset(item.id, item.properties.get("collection"), item.properties.get("start_datetime",None), item.properties.get("end_datetime", None), item.properties.get("created", None))
+                ds.bbox = item.bbox
+                ds.geometry = item.geometry
                 # Add other parameters/properties here
                 # TODO
                 # ds.add_property(key,value)

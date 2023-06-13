@@ -41,6 +41,8 @@ class Dataset(object):
         self.data_end_time = end_time
         self.data_create_time = creation_time
         self.properties = {}
+        self.geometry = None
+        self.bbox = None
 
     def add_data_file(self, datafile: type=DataFile):
         """adds a data file to a dataset

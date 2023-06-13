@@ -48,8 +48,10 @@ def test_read_stac():
 
 def test_write_stac():
     collection = Collection.from_stac("tests/test_files/cmr_granules.json")
-    Collection.to_stac(collection, "tests/test_files" )
+    Collection.to_stac(collection, "tests/test_files/tmp" )
 
+    collection = Collection.from_stac("tests/test_files/catalog_01.json")
+    Collection.to_stac(collection, "tests/test_files/tmp" )
 
 # for x in 4000:
 #     dataset = Dataset(namne, start, stoptime)
