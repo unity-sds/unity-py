@@ -6,7 +6,7 @@
   "links": [
     {
       "rel": "root",
-      "href": "./catalog.json",
+      "href": "./catalog_01.json",
       "type": "application/json"
     },
     {
