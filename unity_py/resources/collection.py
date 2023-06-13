@@ -1,9 +1,15 @@
 from unity_py.unity_exception import UnityException
 from unity_py.resources.dataset import Dataset
 from unity_py.resources.data_file import DataFile
-from pystac import Catalog, get_stac_version, ItemCollection
+from pystac import Catalog, get_stac_version, ItemCollection, Item, Asset
 from pystac.errors import STACTypeError
 import json
+from datetime import datetime
+from datetime import timezone
+from pystac import CatalogType
+from dateutil import parser as date_parser
+
+#import pytz
 
 class Collection(object):
     """The Collection object contains metadata about a collection within the Unity system.
@@ -40,6 +46,47 @@ class Collection(object):
             return [file.location for files in [x.datafiles for x in self._datasets] for file in files if file.type in type  ]
 
 
+    def to_stac(collection, data_dir):
+        """
+            A method for writing stac and converting it from a unity collection object. The caller is responsible for providing a collection, datasets and datafiles along with the output location of the data.
+            Parameters
+            ----------
+            collection : Collection
+                The colleciton object to convert into stac catalog + stac item files.
+            stac_file : String
+                The location of the stac file to read.
+
+        """
+        catalog = Catalog(id=collection.collection_id, description="STAC Catalog")
+        for dataset in collection._datasets:
+            updated = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+            print(dataset.data_begin_time)
+            item = Item(
+            id=dataset.id,
+            geometry="",
+            bbox="",
+            datetime = date_parser.parse(dataset.data_begin_time),
+            properties={
+                "datetime": dataset.data_begin_time,
+                "start_datetime": dataset.data_begin_time,
+                "end_datetime":dataset.data_end_time,
+                "created": dataset.data_create_time if dataset.data_create_time!= None else updated,
+                "updated": updated
+            },
+        )
+        catalog.add_item(item)
+        for df in dataset.datafiles:
+            item.add_asset(
+                # key="data", asset=pystac.Asset(href=f,title="Main Data File", media_type=pystac.MediaType.HDF5)
+                key=df.type, asset=Asset(href=df.location,title="{} file".format(df.type))
+                )
+
+        from pystac.layout import TemplateLayoutStrategy
+        write_dir = data_dir
+        strategy = TemplateLayoutStrategy(item_template="")
+        catalog.normalize_hrefs(write_dir,strategy=strategy)
+        catalog.save(catalog_type=CatalogType.SELF_CONTAINED, dest_href=write_dir)
+
 
     def from_stac(stac_file):
         """
@@ -74,7 +121,11 @@ class Collection(object):
                 with open(stac_file, 'r') as f:
                     data = json.load(f)
                 ic = ItemCollection.from_dict(data)
-                id = ic.items[0].properties.get("collection", None)
+                try:
+                    id = data['features'][0]['collection']
+                except:
+                    pass
+
                 items = ic.items
 
             collection = Collection(id)

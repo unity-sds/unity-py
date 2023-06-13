@@ -18,6 +18,7 @@ def test_read_corrupt_stac():
 
 def test_read_stac():
     collection = Collection.from_stac("tests/test_files/cmr_granules.json")
+    assert collection.collection_id == "C2011289787-GES_DISC"
     datasets = collection._datasets
     assert len(datasets) == 2
 
@@ -33,7 +34,7 @@ def test_read_stac():
         assert x in ['https://data.gesdisc.earthdata.nasa.gov/data/CHIRP/SNDR13CHRP1.2/2016/235/SNDR.SS1330.CHIRP.20160822T0005.m06.g001.L1_AQ.std.v02_48.G.200425095850.nc', 'https://data.gesdisc.earthdata.nasa.gov/data/CHIRP/SNDR13CHRP1.2/2016/235/SNDR.SS1330.CHIRP.20160822T0011.m06.g002.L1_AQ.std.v02_48.G.200425095901.nc']
 
         #Try a "classic" catalog + item files stac catalog
-    collection = Collection.from_stac("tests/test_files/catalog.json")
+    collection = Collection.from_stac("tests/test_files/catalog_01.json")
     datasets = collection._datasets
     assert len(datasets) == 1
     data_files = collection.data_locations()
@@ -45,8 +46,9 @@ def test_read_stac():
     assert data_files[0] == "/unity/ads/sounder_sips/chirp_test_data/SNDR.SS1330.CHIRP.20160829T2317.m06.g233.L1_AQ.std.v02_48.G.200425130422.json"
 
 
-def test_dapa_read_stac():
-    return None
+def test_write_stac():
+    collection = Collection.from_stac("tests/test_files/cmr_granules.json")
+    Collection.to_stac(collection, "tests/test_files" )
 
 
 # for x in 4000:

@@ -1,3 +1,6 @@
+# Repo Specific
+tests/test_files/catalog.json
+tests/test_files/G2040068619-GES_DISC.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
