@@ -1,3 +1,5 @@
+# Repo Specific
+tests/test_files/tmp/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
