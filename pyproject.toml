@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "unity_py"
-version = "0.1.0"
+version = "0.1.1"
 description = "Unity-Py is a Python client to simplify interactions with NASA's Unity Platform."
 authors = ["Anil Natha, Mike Gangl"]
 readme = "README.md"
