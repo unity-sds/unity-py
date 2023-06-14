@@ -52,12 +52,3 @@ def test_write_stac():
 
     collection = Collection.from_stac("tests/test_files/catalog_01.json")
     Collection.to_stac(collection, "tests/test_files/tmp" )
-
-# for x in 4000:
-#     dataset = Dataset(namne, start, stoptime)
-#     dataset.addFile("data", "/path/to/tiled.nc")
-
-# dataset.to_stac("ouput_file_location.json")
-# def test_write_stac():
-#     unity2stac("catalog.json")
-#     assert True == True
