@@ -65,4 +65,4 @@ class Dataset(object):
         Value : Object
             the property value to be set
         """
-        self.properties.set(key,value)
+        self.properties[key] =  value

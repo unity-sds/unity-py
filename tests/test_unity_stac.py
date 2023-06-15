@@ -1,7 +1,8 @@
 from unity_py.unity_exception import UnityException
-from unity_py.resources.collection import Collection
-
+from unity_py.resources.collection import Collection, Dataset, DataFile
+import datetime
 import pytest
+import os
 
 @pytest.fixture
 def cleanup_update_test():
@@ -52,3 +53,31 @@ def test_write_stac():
 
     collection = Collection.from_stac("tests/test_files/catalog_01.json")
     Collection.to_stac(collection, "tests/test_files/tmp" )
+
+
+
+def test_unity_to_stac():
+    root = os.getcwd()
+    application_output_directory = root + "/tests/test_files/tmp2"
+
+    #Create a collection
+    collection  = Collection("SNDR13CHRP1AQCal_rebin")
+
+    # Create a Dataset for the collection
+    dataset_name = "SNDR.SS1330.CHIRP.20230615T0131.m06.g001.L1_AQ_CAL.std.v02_54.G.200615152827"
+    dataset_start_time = "2023-06-15T01:31:12.467113Z"
+    dataset_end_time = "2023-06-15T01:36:12.467113Z"
+    dataset_create_time = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
+    dataset = Dataset(dataset_name, collection.collection_id, dataset_start_time, dataset_end_time, dataset_create_time)
+
+    #Add 2 files to the dataset
+    dataset.add_data_file(DataFile("data",application_output_directory+"/file.nc"))
+    dataset.add_data_file(DataFile("metadadata",application_output_directory + "/file.xml"))
+
+    # Add arbitrary metadata to the product
+    dataset.add_property("percent_cloud_cover", .01)
+
+    #Add the dataset to the collection
+    collection.add_dataset(dataset)
+
+    Collection.to_stac(collection, application_output_directory)
