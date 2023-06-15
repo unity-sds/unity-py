@@ -75,8 +75,10 @@ class Collection(object):
                 "created": dataset.data_create_time if dataset.data_create_time!= None else updated,
                 "updated": updated
             },
-        )
-        catalog.add_item(item)
+
+            )
+            catalog.add_item(item)
+
         for df in dataset.datafiles:
             item.add_asset(
                 # key="data", asset=pystac.Asset(href=f,title="Main Data File", media_type=pystac.MediaType.HDF5)
