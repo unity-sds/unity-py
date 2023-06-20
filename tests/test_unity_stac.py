@@ -71,13 +71,34 @@ def test_unity_to_stac():
     dataset = Dataset(dataset_name, collection.collection_id, dataset_start_time, dataset_end_time, dataset_create_time)
 
     #Add 2 files to the dataset
-    dataset.add_data_file(DataFile("data",application_output_directory+"/file.nc"))
-    dataset.add_data_file(DataFile("metadadata",application_output_directory + "/file.xml"))
+    dataset.add_data_file(DataFile("data","./file.nc"))
+    dataset.add_data_file(DataFile("metadadata", "./file.xml"))
+    assert len(dataset.datafiles) == 2
+
 
     # Add arbitrary metadata to the product
-    dataset.add_property("percent_cloud_cover", .01)
+    #dataset.add_property("percent_cloud_cover", .01)
 
     #Add the dataset to the collection
     collection.add_dataset(dataset)
 
+    # Add another file...
+    dataset_name = "SNDR.SS1330.CHIRP.20230615T0131.m06.g001.L1_AQ_CAL.std.v02_54.G.200615152827_01"
+    dataset2 = Dataset(dataset_name, collection.collection_id, dataset_start_time, dataset_end_time, dataset_create_time)
+    dataset2.add_data_file(DataFile("data",application_output_directory+"/file2.nc"))
+    dataset2.add_data_file(DataFile("metadadata",application_output_directory + "/file2.xml"))
+    collection.add_dataset(dataset2)
+
+    assert len(dataset.datafiles) == 2
+    assert len(dataset2.datafiles) == 2
+
     Collection.to_stac(collection, application_output_directory)
+
+
+    # Read in the just written stac file to confirm paths are absolute
+    collection = Collection.from_stac("tests/test_files/tmp2/catalog.json")
+    assert len(collection._datasets) == 2
+    for d in collection._datasets:
+        for df in d.datafiles:
+            assert "tests/test_files/tmp2/" in df.location
+            assert os.path.isabs(df.location) == True

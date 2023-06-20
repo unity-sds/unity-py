@@ -4,6 +4,7 @@ from unity_py.resources.data_file import DataFile
 from pystac import Catalog, get_stac_version, ItemCollection, Item, Asset
 from pystac.errors import STACTypeError
 import json
+import os
 from datetime import datetime
 from datetime import timezone
 from pystac import CatalogType
@@ -48,6 +49,11 @@ class Collection(object):
         else:
             return [file.location for files in [x.datafiles for x in self._datasets] for file in files if file.type in type  ]
 
+    def is_uri(path):
+        if(path.startswith(tuple(["http:","https:","s3:"]))):
+            return True
+        else:
+            return False
 
     def to_stac(collection, data_dir):
         """
@@ -79,11 +85,16 @@ class Collection(object):
             )
             catalog.add_item(item)
 
-        for df in dataset.datafiles:
-            item.add_asset(
-                # key="data", asset=pystac.Asset(href=f,title="Main Data File", media_type=pystac.MediaType.HDF5)
-                key=df.type, asset=Asset(href=df.location,title="{} file".format(df.type))
-                )
+            for df in dataset.datafiles:
+                print("adding " +str(df))
+                if(Collection.is_uri(df.location)):
+                    item_location = df.location
+                else:
+                    item_location = df.location.replace(data_dir,".")
+                item.add_asset(
+                    # key="data", asset=pystac.Asset(href=f,title="Main Data File", media_type=pystac.MediaType.HDF5)
+                    key=df.type, asset=Asset(href=item_location,title="{} file".format(df.type))
+                    )
 
         from pystac.layout import TemplateLayoutStrategy
         write_dir = data_dir
@@ -106,6 +117,7 @@ class Collection(object):
                 A collection object including defined datasets
 
         """
+        stac_dir = os.path.abspath(os.path.dirname(stac_file))
         data = []
         id = None
         root_catalog = None
@@ -144,8 +156,14 @@ class Collection(object):
                 # ds.add_property(key,value)
 
                 for asset_key in item.assets:
-                     asset = item.assets[asset_key]
-                     ds.add_data_file(DataFile(asset_key ,asset.href))
+                    asset = item.assets[asset_key]
+                    if(Collection.is_uri(asset.href)):
+                        ds.add_data_file(DataFile(asset_key ,asset.href))
+                    elif(os.path.isabs(asset.href)):
+                        ds.add_data_file(DataFile(asset_key ,asset.href))
+                    else:
+                        ds.add_data_file(DataFile(asset_key ,os.path.join(stac_dir, asset.href)))
+
                 collection._datasets.append(ds)
             return collection
         except FileNotFoundError as fnfe:
