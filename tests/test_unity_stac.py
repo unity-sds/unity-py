@@ -59,6 +59,7 @@ def test_write_stac():
 def test_unity_to_stac():
     root = os.getcwd()
     application_output_directory = root + "/tests/test_files/tmp2"
+    assert os.path.isabs(application_output_directory) == True
 
     #Create a collection
     collection  = Collection("SNDR13CHRP1AQCal_rebin")
@@ -77,7 +78,7 @@ def test_unity_to_stac():
 
 
     # Add arbitrary metadata to the product
-    #dataset.add_property("percent_cloud_cover", .01)
+    dataset.add_property("percent_cloud_cover", .01)
 
     #Add the dataset to the collection
     collection.add_dataset(dataset)
@@ -98,7 +99,14 @@ def test_unity_to_stac():
     # Read in the just written stac file to confirm paths are absolute
     collection = Collection.from_stac("tests/test_files/tmp2/catalog.json")
     assert len(collection._datasets) == 2
+    prop_count = 0
+
     for d in collection._datasets:
         for df in d.datafiles:
             assert application_output_directory in df.location
             assert os.path.isabs(df.location) == True
+
+
+        if "percent_cloud_cover" in d.properties:
+            prop_count +=1
+    assert prop_count == 1

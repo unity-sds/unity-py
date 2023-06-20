@@ -83,6 +83,7 @@ class Collection(object):
             },
 
             )
+            item.properties.update(dataset.properties)
             catalog.add_item(item)
 
             for df in dataset.datafiles:
@@ -150,9 +151,9 @@ class Collection(object):
                 ds = Dataset(item.id, item.properties.get("collection"), item.properties.get("start_datetime",None), item.properties.get("end_datetime", None), item.properties.get("created", None))
                 ds.bbox = item.bbox
                 ds.geometry = item.geometry
-                # Add other parameters/properties here
-                # TODO
-                # ds.add_property(key,value)
+
+                # Add other STAC properties to dataset properties
+                ds.properties.update(item.properties)
 
                 for asset_key in item.assets:
                     asset = item.assets[asset_key]
