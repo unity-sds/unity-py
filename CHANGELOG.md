@@ -15,8 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added from_stac methods for creating unity-py resources (e.g. collection, dataset, datafiles) from STAC files
 * Added capability to add files to published application catalogs
 * added dependency on pystac > 1.7.3 to unity-py
+* added addition of dataset properties to stac read/write
 ### Fixed
 ### Changed
+* all assets written out to STAC items are made relative (if they are non-URIs, relative, or exist in the same directory tree of the STAC files)
 ### Removed
 * Removed support for python 3.8
 
