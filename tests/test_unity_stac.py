@@ -100,5 +100,5 @@ def test_unity_to_stac():
     assert len(collection._datasets) == 2
     for d in collection._datasets:
         for df in d.datafiles:
-            assert "tests/test_files/tmp2/" in df.location
+            assert application_output_directory in df.location
             assert os.path.isabs(df.location) == True

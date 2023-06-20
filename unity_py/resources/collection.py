@@ -86,7 +86,6 @@ class Collection(object):
             catalog.add_item(item)
 
             for df in dataset.datafiles:
-                print("adding " +str(df))
                 if(Collection.is_uri(df.location)):
                     item_location = df.location
                 else:
