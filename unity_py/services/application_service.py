@@ -1,6 +1,7 @@
 import json
 import os
 import requests
+from zipfile import ZipFile
 
 from functools import cached_property
 
@@ -160,8 +161,9 @@ class DockstoreAppCatalog(ApplicationCatalog):
         """
         Creates a new DockstoreAppCatalog.
 
-        api_url: Dockstore API URL
-        token: Token is a string that can be obtained from the Dockstore user Account screen
+        Args:
+            api_url: Dockstore API URL
+            token: Token is a string that can be obtained from the Dockstore user Account screen
         """
 
         self.api_url = api_url
@@ -169,19 +171,65 @@ class DockstoreAppCatalog(ApplicationCatalog):
 
     @property
     def _headers(self):
-        "Headers needed by the Dockstore API"
-
+        """
+        Headers needed by the Dockstore API.
+        """
         return {
             "accept": "application/json",
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
         }
 
-    def _get(self, request_url):
+    @property
+    def _zip_headers(self):
+        """
+        Header used to download ZIP archive of the workflow descriptor and parameter files.
+        """
+        return {
+            "Accept": "application/zip",
+            "Authorization": f"Bearer {self.token}"
+        }
+
+    def _get(self, request_url, params=None):
+        """
+        Submit GET request to the Dockstore API.
+
+        Args:
+            request_url: String representing request URL
+            params: Optional parameters dictionary for the request. Defaults to None.
+
+        Raises:
+            ApplicationCatalogAccessError: unexpected status code: XXX with message: YYY
+
+        Returns:
+            requests.Response
+        """
 
         request_url = request_url.strip("/")
 
-        response = requests.get(f"{self.api_url}/{request_url}", headers=self._headers)
+        response = requests.get(f"{self.api_url}/{request_url}", headers=self._headers, params=params)
+
+        if response.status_code != 200:
+            raise ApplicationCatalogAccessError(f"GET operation to application catalog at {self.api_url}/{request_url} return unexpected status code: {response.status_code} with message: {response.content}")
+
+        return response
+
+    def _get_zip(self, request_url):
+        """
+        Submit GET request to the Dockstore API to download ZIP archive of the workflow descriptor and parameter files.
+
+        Args:
+            request_url: String representing request URL
+
+        Raises:
+            ApplicationCatalogAccessError: unexpected status code: XXX with message: YYY
+
+        Returns:
+            requests.Response
+        """
+        request_url = request_url.strip("/")
+
+        response = requests.get(f"{self.api_url}/{request_url}", headers=self._zip_headers)
 
         if response.status_code != 200:
             raise ApplicationCatalogAccessError(f"GET operation to application catalog at {self.api_url}/{request_url} return unexpected status code: {response.status_code} with message: {response.content}")
@@ -268,11 +316,12 @@ class DockstoreAppCatalog(ApplicationCatalog):
         """
         Generate JSON format of the file representation for the Dockstore request.
 
-        file_path: Path to the file to create JSON format request representation for.
-            If None or empty filepath is provided, then "dockstore_path" file will be
-            removed from the hosted workflow.
-        dockstore_path: Path to the file in the Dockstore.
-        file_format: Dockstore file type for the file.
+        Args:
+            file_path: Path to the file to create JSON format request representation for.
+                If None or empty filepath is provided, then "dockstore_path" file will be
+                removed from the hosted workflow.
+            dockstore_path: Path to the file in the Dockstore.
+            file_format: Dockstore file type for the file.
         """
         # Dockstore requires absolute path for the file to be uploaded
         dockstore_file_path = f'/{dockstore_path}' if dockstore_path[0] != '/' else dockstore_path
@@ -294,6 +343,9 @@ class DockstoreAppCatalog(ApplicationCatalog):
     def application(self, app_id: int):
         """
         Get application information from the Dockstore based on the application ID.
+
+        Args:
+            app_id: Application ID.
         """
         request_url = f"/workflows/{app_id}"
         return self._application_from_json(self._get(request_url).json())
@@ -303,7 +355,7 @@ class DockstoreAppCatalog(ApplicationCatalog):
         For Dockstore optionally filter the application list for the user belonging to the token
         as well as restrict to just published applications.
 
-        Unpublished applications can only be seen when using for_user=True
+        Unpublished applications can only be seen when using for_user=True.
         """
         request_url = "/workflows/published"
 
@@ -350,20 +402,19 @@ class DockstoreAppCatalog(ApplicationCatalog):
             'local_path/params_one.json': 'l1_params/params_one.json'
         }
 
-        Inputs:
-        app_name: Application name to register within the Dockstore.
-        app_type: Type of the application. Default is 'CWL'.
-        cwl_files: List of CWL format parameter file paths to upload to the Dockstore. Default is an empty list.
-        json_files: List of JSON format parameter file paths to upload to the Dockstore. Default is an empty list.
-        filename_map: Mapping of parameter filenames on local file system vs. filename path as to appear in
-            the Dockstore once the file is uploaded. Default is an empty map meaning that each file will be uploaded into
-            the Dockstore using its basename.
-        publish: Flag if registered application should be published within the Dockstore. Default is True meaning that
-            application should be published once it's registered within the Dockstore. Applications that does not have
-            any files uploaded to the Dockstore can't be published.
+        Args:
+            app_name: Application name to register within the Dockstore.
+            app_type: Type of the application. Default is 'CWL'.
+            cwl_files: List of CWL format parameter file paths to upload to the Dockstore. Default is an empty list.
+            json_files: List of JSON format parameter file paths to upload to the Dockstore. Default is an empty list.
+            filename_map: Mapping of parameter filenames on local file system vs. filename path as to appear in
+                the Dockstore once the file is uploaded. Default is an empty map meaning that each file will be uploaded into
+                the Dockstore using its basename.
+            publish: Flag if registered application should be published within the Dockstore. Default is True meaning that
+                application should be published once it's registered within the Dockstore. Applications that does not have
+                any files uploaded to the Dockstore can't be published.
         """
-        # Set up request parameters for the Dockstore application as expected for
-        # the hosted workflow
+        # Set up request parameters for the Dockstore application as expected for the hosted workflow
         params = {
             'name': app_name,
             'descriptorType': app_type,
@@ -498,6 +549,76 @@ class DockstoreAppCatalog(ApplicationCatalog):
         request_url = f"/workflows/hostedEntry/{application.id}"
 
         self._patch(request_url, params)
+
+    def get_application_version_info(self, application):
+        """
+        Retrieve version information for the workflow. Generated version information is
+        a dictionary of the "db_version_id: workflow_version_id" content.
+        This method identifies a mapping between database ID and the "name" of the workflow version
+        as it appears in the Dockstore UI.
+        Docktore uses DB version ID instead of the version ID as it appears in the Dockstore UI for the
+        file retrieval.
+
+        Args:
+            application: DockstoreApplicationPackage object to retrieve version information for.
+
+        Returns:
+            dict
+        """
+        request_url = f"/workflows/{application.id}"
+
+        params = {
+            'include': 'versions'
+        }
+
+        response = self._get(request_url, params=params).json()
+
+        application_versions = {}
+        for each in response['workflowVersions']:
+            application_versions[each['id']] = each['name']
+
+        return application_versions
+
+    def download_files(self, application, output_dir_path: str):
+        """
+        Download latest version of parameter files for the workflow.
+        The method stores ZIP archive of all parameter files as well as
+        all extracted files to the "output_dir_path" directory.
+
+        Args:
+            application: DockstoreApplicationPackage to download parameter files for.
+            output_dir_path: Target directory for the workflow ZIP archive and extracted
+                workflow files.
+        """
+        app_versions = self.get_application_version_info(application)
+
+        # Pick the latest (maximum) workflow version - use DB ID for the version
+        latest_version_id = max(app_versions.keys())
+
+        # Create directory to store workflow files to if it does not exist.
+        if not os.path.exists(output_dir_path):
+            os.mkdir(output_dir_path)
+
+        # Create ZIP filename with the version name as it appears in the Dockstore UI
+        zip_file_path = os.path.join(
+            output_dir_path,
+            f'application_id{application.id}_v{app_versions[latest_version_id]}.zip'
+        )
+
+        # Download the zip archive file
+        with open(zip_file_path, 'wb') as f:
+            request_url = f"/workflows/{application.id}/zip/{latest_version_id}"
+            response = self._get_zip(request_url)
+
+            for chunk in response.iter_content(chunk_size=512):
+                if chunk:  # filter out keep-alive new chunks
+                    f.write(chunk)
+
+        # Retrieve files from downloaded ZIP archive
+        with ZipFile(zip_file_path) as fh:
+            fh.extractall(output_dir_path)
+
+        # Keep the ZIP archive in case it's needed
 
     def publish(self, application):
         """
