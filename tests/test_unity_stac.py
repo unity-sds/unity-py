@@ -20,7 +20,7 @@ def test_read_corrupt_stac():
 def test_read_stac():
     collection = Collection.from_stac("tests/test_files/cmr_granules.json")
     assert collection.collection_id == "C2011289787-GES_DISC"
-    datasets = collection._datasets
+    datasets = collection.datasets
     assert len(datasets) == 2
 
     data_files = collection.data_locations()
@@ -36,7 +36,7 @@ def test_read_stac():
 
         #Try a "classic" catalog + item files stac catalog
     collection = Collection.from_stac("tests/test_files/catalog_01.json")
-    datasets = collection._datasets
+    datasets = collection.datasets
     assert len(datasets) == 1
     data_files = collection.data_locations()
     assert len(data_files) == 2

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --------
 
-## [0.1.1] - 2023-06-14
+## [0.1.1] - 2023-06-27
 
 ### Added
 * Added pypi repository publication to unity-py repository [[7](https://github.com/unity-sds/unity-py/issues/7)].
@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added capability to add files to published application catalogs
 * added dependency on pystac > 1.7.3 to unity-py
 * added addition of dataset properties to stac read/write
+* added method for retrieving datasets `Collection.datasets()` from a collection
 ### Fixed
 ### Changed
 * all assets written out to STAC items are made relative (if they are non-URIs, relative, or exist in the same directory tree of the STAC files)
