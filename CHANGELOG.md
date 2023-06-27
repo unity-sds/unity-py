@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --------
 
-## [0.1.1] - 2023-06-14
+## [0.1.1] - 2023-06-27
 
 ### Added
 * Added pypi repository publication to unity-py repository [[7](https://github.com/unity-sds/unity-py/issues/7)].
