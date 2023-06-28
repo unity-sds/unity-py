@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added capability to add files to published application catalogs
 * added dependency on pystac > 1.7.3 to unity-py
 * added addition of dataset properties to stac read/write
+* Added functionality to download latest available version of the application parameter files stored in the Dockstore [[30](https://github.com/unity-sds/unity-py/issues/30)]
 ### Fixed
 * Added some directory slash stripping to ensure no trailing slash when specifying "to_stac" output director
 ### Changed
