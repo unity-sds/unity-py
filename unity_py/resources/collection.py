@@ -31,6 +31,18 @@ class Collection(object):
     def add_dataset(self, dataset: Dataset):
         self._datasets.append(dataset)
 
+    @property
+    def datasets(self):
+        """
+        A method to return the included datasets from a collection object.
+
+        Returns
+            -------
+            dataset
+                List of dataset objects
+        """
+        return self._datasets
+
     def data_locations(self, type=[]):
         """
             A method to list all asset locations (data, metdata, etc)
@@ -66,6 +78,9 @@ class Collection(object):
                 The location of the stac file to read.
 
         """
+        # check data dir for a dangling "/"
+        data_dir = data_dir.rstrip('/')
+
         catalog = Catalog(id=collection.collection_id, description="STAC Catalog")
         for dataset in collection._datasets:
             updated = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
