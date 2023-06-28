@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2023-06-27
 
 ### Added
+* Added public accessor to 'dataset' object in collection
 * Added pypi repository publication to unity-py repository [[7](https://github.com/unity-sds/unity-py/issues/7)].
 * Added to_stac methods for writing STAC from unity-py resources (e.g. collection, dataset, datafiles)
 * Added from_stac methods for creating unity-py resources (e.g. collection, dataset, datafiles) from STAC files
@@ -18,8 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * added addition of dataset properties to stac read/write
 * added method for retrieving datasets `Collection.datasets()` from a collection
 ### Fixed
+* Added some directory slash stripping to ensure no trailing slash when specifying "to_stac" output director
 ### Changed
 * all assets written out to STAC items are made relative (if they are non-URIs, relative, or exist in the same directory tree of the STAC files)
+* Changed name of package from unity-py to unity-sds-client
 ### Removed
 * Removed support for python 3.8
 
