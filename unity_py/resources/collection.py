@@ -78,6 +78,9 @@ class Collection(object):
                 The location of the stac file to read.
 
         """
+        # check data dir for a dangling "/"
+        data_dir = data_dir.rstrip('/')
+
         catalog = Catalog(id=collection.collection_id, description="STAC Catalog")
         for dataset in collection._datasets:
             updated = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
