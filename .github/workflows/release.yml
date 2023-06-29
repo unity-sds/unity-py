@@ -57,7 +57,7 @@ jobs:
           python -m pip install --upgrade pip
 
           # Retry 3 times before the steps actually fails because sometimes it takes a minute for pip to recognize the new version
-          (echo "pip Install Attempt: 1" && pip install --force unity_py==${{ needs.release.outputs.publishedVersion }}) || \
-          (echo "pip Install Attempt: 2" && pip install --force unity_py==${{ needs.release.outputs.publishedVersion }}) || \
-          (echo "pip Install Attempt: 3" && pip install --force unity_py==${{ needs.release.outputs.publishedVersion }}) || \
+          (echo "pip Install Attempt: 1" && pip install --force unity-sds-client==${{ needs.release.outputs.publishedVersion }}) || \
+          (echo "pip Install Attempt: 2" && pip install --force unity-sds-client==${{ needs.release.outputs.publishedVersion }}) || \
+          (echo "pip Install Attempt: 3" && pip install --force unity-sds-client==${{ needs.release.outputs.publishedVersion }}) || \
           (echo "pip Install Step Failed" && exit 1)
