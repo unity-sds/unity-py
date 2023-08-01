@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --------
 
+## UNRELEASED
+
+### Added
+### Fixed
+* fixed release workflow to test against `unity-sds-client` not `unity_py` 
+### Changed
+### Removed
+### Security
+### Deprecated
+
 ## [0.1.2] - 2023-06-28
 
 ### Added

@@ -4,6 +4,11 @@ Unity-Py is a Python client to simplify interactions with NASA's Unity Platform.
 
 ## Installation
 
+### Install from pypi
+```
+pip install unity-sds-client
+```
+
 ### Install from Github
 ```
 python -m pip install git+https://github.com/unity-sds/unity-py.git
