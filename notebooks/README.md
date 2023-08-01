@@ -2,7 +2,7 @@
 
 ## mercury-dashboard.ipynb
 
-An example notebook using the unity-py client to create a pseudo operator dashboard. Proof of concept and a way of defining what items need to be in the client, and what metadata/data services need to return.
+An example notebook using the unity-sds-client Python package to create a pseudo operator dashboard. Proof of concept and a way of defining what items need to be in the client, and what metadata/data services need to return.
 
 ### requirements
 ```

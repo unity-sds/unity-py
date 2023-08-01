@@ -2,10 +2,10 @@ import json
 import requests
 from typing import List
 
-from unity_py.unity_session import UnitySession
-from unity_py.resources.process import Process
-from unity_py.resources.job import Job, JobStatus
-from unity_py.utils.http import get_headers
+from unity_sds_client.unity_session import UnitySession
+from unity_sds_client.resources.process import Process
+from unity_sds_client.resources.job import Job, JobStatus
+from unity_sds_client.utils.http import get_headers
 
 class ProcessService(object):
     """

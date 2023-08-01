@@ -36,9 +36,9 @@ The order of Authentication Parameters is as follows:
 ### Running your first command
 
 ```
-from unity_py.unity import Unity
-from unity_py.unity_session import UnitySession
-from unity_py.unity_services import UnityServices as services
+from unity_sds_client.unity import Unity
+from unity_sds_client.unity_session import UnitySession
+from unity_sds_client.unity_services import UnityServices as services
 
 s = Unity()
 dataManager = s.client(services.DATA_SERVICE)

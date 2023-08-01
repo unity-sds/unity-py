@@ -1,6 +1,6 @@
-from unity_py.unity import Unity
-from unity_py.unity_session import UnitySession
-from unity_py.unity_services import UnityServices as services
+from unity_sds_client.unity import Unity
+from unity_sds_client.unity_session import UnitySession
+from unity_sds_client.unity_services import UnityServices as services
 
 import pytest
 
