@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 * fixed release workflow to test against `unity-sds-client` not `unity_py` 
 ### Changed
+* updated package name so that imports reference `unity_sds_client` not `unity_py`
 ### Removed
 ### Security
 ### Deprecated
