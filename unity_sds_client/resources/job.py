@@ -2,18 +2,18 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import requests
 
-from unity_py.unity_session import UnitySession
-from unity_py.resources.job_status import JobStatus
-from unity_py.utils.http import get_headers
+from unity_sds_client.unity_session import UnitySession
+from unity_sds_client.resources.job_status import JobStatus
+from unity_sds_client.utils.http import get_headers
 
 if TYPE_CHECKING:
-    from unity_py.resources.process import Process
+    from unity_sds_client.resources.process import Process
 
 
 class Job(object):
 
     def __str__(self):
-        return '''unity_py.resources.Job(
+        return '''unity_sds_client.resources.Job(
     id="{}",
     status="{}",
     inputs={}

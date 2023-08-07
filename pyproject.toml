@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "unity-sds-client"
-version = "0.1.2"
+version = "0.2.0"
 description = "Unity-Py is a Python client to simplify interactions with NASA's Unity Platform."
 authors = ["Anil Natha, Mike Gangl"]
 readme = "README.md"
@@ -8,7 +8,7 @@ license = "Apache-2.0"
 repository = "https://github.com/unity-sds/unity-py"
 exclude = ['img', 'tests']
 packages = [
-    { include = "unity_py" },
+    { include = "unity_sds_client" },
 ]
 
 [tool.poetry.dependencies]

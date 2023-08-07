@@ -3,7 +3,7 @@ class DataFile(object):
     """
 
     def __str__(self):
-        return f'unity_py.resources.DataFile(location={self.location})'
+        return f'unity_sds_client.resources.DataFile(location={self.location})'
 
     def __repr__(self):
         return self.__str__()

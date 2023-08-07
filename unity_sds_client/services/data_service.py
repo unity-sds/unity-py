@@ -1,8 +1,8 @@
 import requests
-from unity_py.unity_session import UnitySession
-from unity_py.resources.collection import Collection
-from unity_py.resources.dataset import Dataset
-from unity_py.resources.data_file import DataFile
+from unity_sds_client.unity_session import UnitySession
+from unity_sds_client.resources.collection import Collection
+from unity_sds_client.resources.dataset import Dataset
+from unity_sds_client.resources.data_file import DataFile
 
 
 class DataService(object):

@@ -1,4 +1,4 @@
-from unity_py.resources.data_file import DataFile
+from unity_sds_client.resources.data_file import DataFile
 
 class Dataset(object):
     """The Dataset object contains metadata about a collection within the Unity system, and also is a container for the data_files within a dataset.
@@ -7,7 +7,7 @@ class Dataset(object):
     """
 
     def __str__(self):
-        return f'unity_py.resources.Dataset(data_id={self.id})'
+        return f'unity_sds_client.resources.Dataset(data_id={self.id})'
 
     def __repr__(self):
         return self.__str__()
@@ -50,7 +50,7 @@ class Dataset(object):
         Parameters
         ----------
         datafile : DataFile
-            a unity_py.resource.datafile object containing the location of data products.
+            a unity_sds_client.resource.datafile object containing the location of data products.
 
         """
         self.datafiles.append(datafile)

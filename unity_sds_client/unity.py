@@ -1,11 +1,11 @@
 import os
 from configparser import ConfigParser, ExtendedInterpolation
-from unity_py.services.data_service import DataService
-from unity_py.services.process_service import ProcessService
-from unity_py.unity_session import UnitySession
-from unity_py.unity_exception import UnityException
-from unity_py.unity_environments import UnityEnvironments
-from unity_py.unity_services import UnityServices
+from unity_sds_client.services.data_service import DataService
+from unity_sds_client.services.process_service import ProcessService
+from unity_sds_client.unity_session import UnitySession
+from unity_sds_client.unity_exception import UnityException
+from unity_sds_client.unity_environments import UnityEnvironments
+from unity_sds_client.unity_services import UnityServices
 
 
 class Unity(object):

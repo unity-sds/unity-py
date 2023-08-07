@@ -1,5 +1,5 @@
-from unity_py.unity_exception import UnityException
-from unity_py.resources.collection import Collection, Dataset, DataFile
+from unity_sds_client.unity_exception import UnityException
+from unity_sds_client.resources.collection import Collection, Dataset, DataFile
 import datetime
 import pytest
 import os

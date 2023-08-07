@@ -1,6 +1,6 @@
-from unity_py.unity_exception import UnityException
-from unity_py.resources.dataset import Dataset
-from unity_py.resources.data_file import DataFile
+from unity_sds_client.unity_exception import UnityException
+from unity_sds_client.resources.dataset import Dataset
+from unity_sds_client.resources.data_file import DataFile
 from pystac import Catalog, get_stac_version, ItemCollection, Item, Asset
 from pystac.errors import STACTypeError
 import json
@@ -17,7 +17,7 @@ class Collection(object):
     """
 
     def __str__(self):
-        return f'unity_py.resources.Collection(collection_id={self.collection_id})'
+        return f'unity_sds_client.resources.Collection(collection_id={self.collection_id})'
 
     def __repr__(self):
         return self.__str__()
