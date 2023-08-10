@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --------
 
-## UNRELEASED
 
+
+## [0.2.0] - 2023-08-10
 ### Added
+* Added parsing of collection in stac items 
 ### Fixed
 * fixed release workflow to test against `unity-sds-client` not `unity_py` 
 ### Changed
