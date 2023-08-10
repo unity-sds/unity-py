@@ -88,6 +88,7 @@ class Collection(object):
             id=dataset.id,
             geometry=dataset.geometry,
             bbox=dataset.bbox,
+            collection=dataset.collection_id,
             datetime = date_parser.parse(dataset.data_begin_time),
             properties={
                 "datetime": dataset.data_begin_time,
@@ -163,7 +164,17 @@ class Collection(object):
             collection = Collection(id)
             # Catch file not found... ?
             for item in items:
-                ds = Dataset(item.id, item.properties.get("collection"), item.properties.get("start_datetime",None), item.properties.get("end_datetime", None), item.properties.get("created", None))
+                # if the id of the catalog and the id of the collection items are not the same,
+                # then use the one that is a part of the collection item definition
+                # Added 8/10/23
+                ds = Dataset(item.id, id, item.properties.get("start_datetime", None),
+                             item.properties.get("end_datetime", None), item.properties.get("created", None))
+                if item.collection_id is not None and item.collection_id != id:
+                     print ("if2")
+                     ds = Dataset(item.id, item.collection_id, item.properties.get("start_datetime", None),
+                                 item.properties.get("end_datetime", None), item.properties.get("created", None))
+
+
                 ds.bbox = item.bbox
                 ds.geometry = item.geometry
 
