@@ -4,7 +4,7 @@ import json
 import requests
 
 from configparser import ConfigParser
-from unity_py.unity_environments import UnityEnvironments
+from unity_sds_client.unity_environments import UnityEnvironments
 
 
 class UnitySession(object):

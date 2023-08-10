@@ -1,6 +1,7 @@
 {
   "type": "Feature",
   "stac_version": "1.0.0",
+  "collection": "collection_test",
   "id": "SNDR.SS1330.CHIRP.20160829T2317.m06.g233.L1_AQ.std.v02_48.G.200425130422",
   "properties": {
     "datetime": "2016-08-29T23:17:00Z",

@@ -1,12 +1,12 @@
 import requests
-from unity_py.unity_session import UnitySession
-from unity_py.resources.job import Job
-from unity_py.utils.http import get_headers
+from unity_sds_client.unity_session import UnitySession
+from unity_sds_client.resources.job import Job
+from unity_sds_client.utils.http import get_headers
 
 class Process(object):
 
     def __str__(self):
-        return '''unity_py.resources.Process(
+        return '''unity_sds_client.resources.Process(
     id="{}",
     title="{}",
     abstract="{}",

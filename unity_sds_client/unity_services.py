@@ -3,7 +3,7 @@ from enum import Enum
 
 class UnityServices(Enum):
     """
-    The UnityServices class is used to specify a service, when needed, when interacting with the unity_py library.
+    The UnityServices class is used to specify a service, when needed, when interacting with the unity_sds_client package.
     """
 
     DATA_SERVICE = "data_service"

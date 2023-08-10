@@ -1,6 +1,6 @@
-from unity_py.unity_exception import UnityException
-from unity_py.resources.dataset import Dataset
-from unity_py.resources.data_file import DataFile
+from unity_sds_client.unity_exception import UnityException
+from unity_sds_client.resources.dataset import Dataset
+from unity_sds_client.resources.data_file import DataFile
 from pystac import Catalog, get_stac_version, ItemCollection, Item, Asset
 from pystac.errors import STACTypeError
 import json
@@ -17,7 +17,7 @@ class Collection(object):
     """
 
     def __str__(self):
-        return f'unity_py.resources.Collection(collection_id={self.collection_id})'
+        return f'unity_sds_client.resources.Collection(collection_id={self.collection_id})'
 
     def __repr__(self):
         return self.__str__()
@@ -88,6 +88,7 @@ class Collection(object):
             id=dataset.id,
             geometry=dataset.geometry,
             bbox=dataset.bbox,
+            collection=dataset.collection_id,
             datetime = date_parser.parse(dataset.data_begin_time),
             properties={
                 "datetime": dataset.data_begin_time,
@@ -163,7 +164,17 @@ class Collection(object):
             collection = Collection(id)
             # Catch file not found... ?
             for item in items:
-                ds = Dataset(item.id, item.properties.get("collection"), item.properties.get("start_datetime",None), item.properties.get("end_datetime", None), item.properties.get("created", None))
+                # if the id of the catalog and the id of the collection items are not the same,
+                # then use the one that is a part of the collection item definition
+                # Added 8/10/23
+                ds = Dataset(item.id, id, item.properties.get("start_datetime", None),
+                             item.properties.get("end_datetime", None), item.properties.get("created", None))
+                if item.collection_id is not None and item.collection_id != id:
+                     print ("if2")
+                     ds = Dataset(item.id, item.collection_id, item.properties.get("start_datetime", None),
+                                 item.properties.get("end_datetime", None), item.properties.get("created", None))
+
+
                 ds.bbox = item.bbox
                 ds.geometry = item.geometry
 

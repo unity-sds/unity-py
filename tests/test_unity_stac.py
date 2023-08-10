@@ -1,5 +1,5 @@
-from unity_py.unity_exception import UnityException
-from unity_py.resources.collection import Collection, Dataset, DataFile
+from unity_sds_client.unity_exception import UnityException
+from unity_sds_client.resources.collection import Collection, Dataset, DataFile
 import datetime
 import pytest
 import os
@@ -23,6 +23,9 @@ def test_read_stac():
     datasets = collection.datasets
     assert len(datasets) == 2
 
+    # Added 8/10/23 to check the STAC collection information
+    assert datasets[1].collection_id == 'C2011289787-GES_DISC'
+
     data_files = collection.data_locations()
     assert len(data_files) == 6
     data_files = collection.data_locations(["data","opendap"])
@@ -37,6 +40,8 @@ def test_read_stac():
         #Try a "classic" catalog + item files stac catalog
     collection = Collection.from_stac("tests/test_files/catalog_01.json")
     datasets = collection.datasets
+    # Added 8/10/23 to check the STAC collection information
+    assert datasets[0].collection_id == 'collection_test'
     assert len(datasets) == 1
     data_files = collection.data_locations()
     assert len(data_files) == 2
@@ -102,6 +107,8 @@ def test_unity_to_stac():
     prop_count = 0
 
     for d in collection._datasets:
+        # Added 8/10/23 to check the STAC collection information
+        assert d.collection_id == 'SNDR13CHRP1AQCal_rebin'
         for df in d.datafiles:
             assert application_output_directory in df.location
             assert os.path.isabs(df.location) == True
