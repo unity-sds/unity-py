@@ -50,4 +50,4 @@ jobs:
         UNITY_USER: '${{ secrets.UNITY_TEST_USER }}'
         UNITY_PASSWORD: '${{ secrets.UNITY_TEST_PASSWORD }}'
       run: |
-        poetry run pytest -o --cov=unity_sds_client log_cli=true --log-cli-level=DEBUG -m "regression"
+        poetry run pytest --cov=unity_sds_client -o log_cli=true --log-cli-level=DEBUG 
