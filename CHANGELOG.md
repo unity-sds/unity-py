@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --------
 
+## [0.2.1] - 2023-11-29
+### Added
+* python code coverage via coveralls
+### Fixed 
+### Changed
+* updated install to support python 3.8 and above.
+### Removed
+### Security
+### Deprecated
 
 
 ## [0.2.0] - 2023-08-10
