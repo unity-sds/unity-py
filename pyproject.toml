@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "unity-sds-client"
-version = "0.2.0"
+version = "0.2.1"
 description = "Unity-Py is a Python client to simplify interactions with NASA's Unity Platform."
 authors = ["Anil Natha, Mike Gangl"]
 readme = "README.md"
@@ -12,7 +12,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 requests = "^2.28.0"
 tenacity = "^8.0.1"
 giturlparse = "^0.10.0"
@@ -23,7 +23,8 @@ pystac = "^1.7.3"
 pytest = "^7.1.2"
 flake8 = "^4.0.1"
 pytest-mock = "^3.8.2"
-
+coverage = "^7.3.1"
+pytest-cov = "^4.1.0"
 
 [tool.pytest.ini_options]
 markers = [
