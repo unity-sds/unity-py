@@ -31,7 +31,8 @@ class UnitySession(object):
         self._config = config
 
         # set up unity authentication
-        self._auth = UnityAuth(self._config.get("DEFAULT", "client_id"), self._config.get("DEFAULT", "auth_endpoint"))
+        self._auth = UnityAuth(self._config.get(env, "client_id"), self._config.get(env, "auth_endpoint"))
+        self._unity_href =  self._config.get(env, "unity_href")
 
     def get_service_endpoint(self, section, setting):
         """convenience method for getting a configured item from the included configuration.
@@ -51,6 +52,22 @@ class UnitySession(object):
 
         """
         return self._config.get(section.upper(), setting)
+
+    def get_unity_href(self):
+        """convenience method for getting the unity href.
+
+                Parameters
+                ----------
+                none
+
+                Returns
+                -------
+                str
+                    the url to the unity top url
+
+                """
+        return self._unity_href
+
 
     def get_auth(self):
         """Returns the auth object in use by the session

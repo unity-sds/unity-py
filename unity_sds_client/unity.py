@@ -21,9 +21,9 @@ class Unity(object):
         """
         env = environment
         config = _read_config([
-            os.path.dirname(os.path.realpath(__file__)) + "/envs/unity.{}.cfg".format(str(env.value).lower())
+            os.path.dirname(os.path.realpath(__file__)) + "/envs/environments.cfg".format(str(env.value).lower())
         ])
-        self._session = UnitySession(env, config)
+        self._session = UnitySession(env.value, config)
 
     def client(self, service_name: UnityServices):
         """
