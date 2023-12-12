@@ -25,6 +25,28 @@ class Unity(object):
         ])
         self._session = UnitySession(env.value, config)
 
+    def set_project(self, project):
+        """
+        :param project: the project to use when interacting with venue specific services. Used in building the restful
+        endpoint.
+        """
+        self._session._project  = project
+
+    def set_venue(self, venue):
+        """
+        :param venue: the venue to use when interacting with venue specific services. Used in building the restful
+        endpoint.
+        """
+        self._session._venue  = venue
+
+    def set_venue_id(self, venue_id):
+        """
+        :param venue_id: explicitly name the venue identifier. Useful for legacy or non-hierarchical venue ids.  Used in
+         building the restful
+        endpoint.
+        """
+        self._session._venue_id = venue_id
+
     def client(self, service_name: UnityServices):
         """
         :param service_name - the desired service, such as UnityServices.APPLICATION_SERVICE, UnityServices.DATA_SERVICE, or UnityServices.PROCESS_SERVICE.
@@ -48,6 +70,7 @@ class Unity(object):
                 response = response + "{}: {}\n".format(setting, dict(config[section])[setting])
 
         return response
+
 
 def _read_config(config_files):
     config = ConfigParser(interpolation=ExtendedInterpolation())

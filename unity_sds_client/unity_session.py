@@ -5,12 +5,15 @@ import requests
 
 from configparser import ConfigParser
 from unity_sds_client.unity_environments import UnityEnvironments
+from unity_sds_client.unity_exception import UnityException
+
 
 
 class UnitySession(object):
     """
     passable session object containing configuration, auth objects, and environment.
     """
+
     def __init__(self, env: UnityEnvironments, config: ConfigParser):
         """initialize the unitySession object which holds configuration and auth objects.
 
@@ -33,6 +36,10 @@ class UnitySession(object):
         # set up unity authentication
         self._auth = UnityAuth(self._config.get(env, "client_id"), self._config.get(env, "auth_endpoint"))
         self._unity_href =  self._config.get(env, "unity_href")
+
+        self._project = None
+        self._venue = None
+        self._venue_id = None
 
     def get_service_endpoint(self, section, setting):
         """convenience method for getting a configured item from the included configuration.
@@ -90,6 +97,15 @@ class UnitySession(object):
         """
         return self._config
 
+    def get_venue_id(self):
+        if self._venue_id is None:
+            if self._project is None or self._venue is None:
+                raise UnityException("session variables project and venue or venue_id are required to interact with a "
+                                     "processing service.")
+            else:
+                return self._project + "/" + self._venue
+        else:
+            return self._venue_id
 
 class UnityAuth(object):
     """
@@ -99,8 +115,9 @@ class UnityAuth(object):
     _token = None
     _token_expiration = None
 
-        # The auth_json is template for authorizing with AWS Cognito for a token that can be used for calls to the data service.
-    # For now this is just an empty data structure. You will be prompted for your username and password in a few steps.
+    # The auth_json is template for authorizing with AWS Cognito for a token that can be used for calls to the
+    # data service. For now this is just an empty data structure. You will be prompted for your username and password
+    # in a few steps.
     auth_json = '''{
          "AuthParameters" : {
             "USERNAME" : "",
