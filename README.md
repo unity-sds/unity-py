@@ -74,6 +74,14 @@ from unity_sds_client.unity_session import UnitySession
 from unity_sds_client.unity_services import UnityServices as services
 
 s = Unity()
+# set the venue for interacting with venue specific services
+# if your venue id is a single string, use the following
+s.set_venue_id("unity-sips-test")
+
+# otherwise set the project and venue:
+# s.set_project("sbg")
+# s.set_venue("dev")
+
 dataManager = s.client(services.DATA_SERVICE)
 collections = dataManager.get_collections()
 print(collections)

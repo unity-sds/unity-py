@@ -36,7 +36,7 @@ class DataService(object):
         """
         self._session = session
         if endpoint is None:
-            self.endpoint = self._session.get_service_endpoint("data", "dapa_endpoint")
+            self.endpoint = self._session.get_unity_href()
 
     def get_collections(self):
         """Returns a list of collections

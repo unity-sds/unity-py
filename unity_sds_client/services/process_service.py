@@ -34,7 +34,9 @@ class ProcessService(object):
         """
         self._session = session
         if endpoint is None:
-            self.endpoint = self._session.get_service_endpoint("sps", "sps_endpoint")
+            # end point is the combination of the processes API and the project/venue
+            # self._session.get_unity_href()
+            self.endpoint = self._session.get_unity_href() + self._session.get_venue_id() + "/ades-wpst/"
 
     def get_processes(self) -> List[Process]:
         """
