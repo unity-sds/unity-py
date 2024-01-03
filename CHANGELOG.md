@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 --------
+## [0.2.2] - 2024-01-03 
+### Added
+* Added project/venue support [5](https://github.com/unity-sds/unity-py/issues/58)
+### Fixed 
+### Changed
+### Removed
+### Security
+### Deprecated
+
+## [0.2.1] - 2023-11-29
+### Added
+* python code coverage via coveralls
+### Fixed 
+### Changed
+* updated install to support python 3.8 and above.
+### Removed
+### Security
+### Deprecated
 
 ## [0.2.1] - 2023-11-29
 ### Added
