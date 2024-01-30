@@ -66,8 +66,14 @@ class DataService(object):
 
         for dataset in results:
             ds = Dataset(dataset['id'], collection.collection_id, dataset['properties']['start_datetime'], dataset['properties']['end_datetime'], dataset['properties']['created'])
-            ds.add_data_file(DataFile("data" ,dataset['assets']['data']['href']))
-            ds.add_data_file(DataFile("metadata" ,dataset['assets']['metadata__data']['href']))
+
+            for filename in dataset['assets']:
+                location = dataset['assets'][filename]['href']
+                file_type = dataset['assets'][filename]['type']
+                title = dataset['assets'][filename]['title']
+                description = dataset['assets'][filename]['description']
+                ds.add_data_file(DataFile(file_type, location, title=title, description=description))
+
             datasets.append(ds)
 
         return datasets

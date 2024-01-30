@@ -24,13 +24,21 @@
     }
   ],
   "assets": {
-    "data": {
+    "SNDR.SS1330.CHIRP.20160829T2317.m06.g233.L1_AQ.std.v02_48.G.200425130422.nc": {
       "href": "/unity/ads/sounder_sips/chirp_test_data/SNDR.SS1330.CHIRP.20160829T2317.m06.g233.L1_AQ.std.v02_48.G.200425130422.nc",
-      "title": "Main Data File"
+      "title": "Main Data File",
+      "description": "",
+      "roles": [
+        "data"
+      ]
     },
-    "metadata_stac": {
+    "SNDR.SS1330.CHIRP.20160829T2317.m06.g233.L1_AQ.std.v02_48.G.200425130422.json": {
       "href": "/unity/ads/sounder_sips/chirp_test_data/SNDR.SS1330.CHIRP.20160829T2317.m06.g233.L1_AQ.std.v02_48.G.200425130422.json",
-      "title": "Metadata STAC File"
+      "title": "Metadata STAC File",
+      "description": "",
+      "roles": [
+        "metadata"
+      ]
     }
   },
   "bbox": "",

@@ -42,6 +42,24 @@ class Collection(object):
                 List of dataset objects
         """
         return self._datasets
+    
+    def data_files(self, type=[]):
+        """
+            A method to list all assets (data, metdata, etc)
+            Parameters
+            ----------
+            type : List of Strings
+                List of "stac asset roles" to filter on. commonly ["data"] is of most importance
+
+            Returns
+            -------
+            files
+                List of returned datafiles
+        """
+        if len(type) == 0:
+            return [file for files in [x.datafiles for x in self._datasets] for file in files]
+        else:
+            return [file for files in [x.datafiles for x in self._datasets] for file in files if file.type in type]
 
     def data_locations(self, type=[]):
         """
@@ -49,7 +67,7 @@ class Collection(object):
             Parameters
             ----------
             type : List of Strings
-                List of "stac asset keys" to filter on. commonly ["data"] is of most importance
+                List of "stac asset roles" to filter on. commonly ["data"] is of most importance
 
             Returns
             -------
@@ -59,7 +77,7 @@ class Collection(object):
         if len(type) == 0:
             return [file.location for files in [x.datafiles for x in self._datasets] for file in files]
         else:
-            return [file.location for files in [x.datafiles for x in self._datasets] for file in files if file.type in type  ]
+            return [file.location for files in [x.datafiles for x in self._datasets] for file in files if file.type in type]
 
     def is_uri(path):
         if(path.startswith(tuple(["http:","https:","s3:"]))):
@@ -85,32 +103,38 @@ class Collection(object):
         for dataset in collection._datasets:
             updated = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
             item = Item(
-            id=dataset.id,
-            geometry=dataset.geometry,
-            bbox=dataset.bbox,
-            collection=dataset.collection_id,
-            datetime = date_parser.parse(dataset.data_begin_time),
-            properties={
-                "datetime": dataset.data_begin_time,
-                "start_datetime": dataset.data_begin_time,
-                "end_datetime":dataset.data_end_time,
-                "created": dataset.data_create_time if dataset.data_create_time!= None else updated,
-                "updated": updated
-            },
-
+                id=dataset.id,
+                geometry=dataset.geometry,
+                bbox=dataset.bbox,
+                collection=dataset.collection_id,
+                datetime = date_parser.parse(dataset.data_begin_time),
+                properties={
+                    "datetime": dataset.data_begin_time,
+                    "start_datetime": dataset.data_begin_time,
+                    "end_datetime":dataset.data_end_time,
+                    "created": dataset.data_create_time if dataset.data_create_time!= None else updated,
+                    "updated": updated
+                },
             )
             item.properties.update(dataset.properties)
             catalog.add_item(item)
 
             for df in dataset.datafiles:
+                
                 if(Collection.is_uri(df.location)):
                     item_location = df.location
                 else:
                     item_location = df.location.replace(data_dir,".")
+
                 item.add_asset(
-                    # key="data", asset=pystac.Asset(href=f,title="Main Data File", media_type=pystac.MediaType.HDF5)
-                    key=df.type, asset=Asset(href=item_location,title="{} file".format(df.type))
+                    key = item_location.rsplit("/",1)[1],
+                    asset = Asset(
+                        href = item_location,
+                        title = "{} file".format(df.type),
+                        description = "",
+                        roles = [df.type]
                     )
+                )
 
         from pystac.layout import TemplateLayoutStrategy
         write_dir = data_dir
@@ -183,12 +207,15 @@ class Collection(object):
 
                 for asset_key in item.assets:
                     asset = item.assets[asset_key]
+                    asset_role = asset.roles[0] if asset.roles is not None else ""
+                    asset_title = asset.title if asset.title is not None else ""
+                    asset_description = asset.description if asset.description is not None else ""
                     if(Collection.is_uri(asset.href)):
-                        ds.add_data_file(DataFile(asset_key ,asset.href))
+                        ds.add_data_file(DataFile(asset_role, asset.href, title=asset_title, description=asset_description))
                     elif(os.path.isabs(asset.href)):
-                        ds.add_data_file(DataFile(asset_key ,asset.href))
+                        ds.add_data_file(DataFile(asset_role, asset.href, title=asset_title, description=asset_description))
                     else:
-                        ds.add_data_file(DataFile(asset_key ,os.path.join(stac_dir, asset.href)))
+                        ds.add_data_file(DataFile(asset_role, os.path.join(stac_dir, asset.href), title=asset_title, description=asset_description))
 
                 collection._datasets.append(ds)
             return collection
