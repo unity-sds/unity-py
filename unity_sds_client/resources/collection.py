@@ -206,10 +206,15 @@ class Collection(object):
                 ds.properties.update(item.properties)
 
                 for asset_key in item.assets:
+
                     asset = item.assets[asset_key]
-                    asset_role = asset.roles[0] if asset.roles is not None else ""
-                    asset_title = asset.title if asset.title is not None else ""
-                    asset_description = asset.description if asset.description is not None else ""
+                    asset_role = asset.roles[0] if asset.roles is not None else None
+                    asset_title = asset.title if asset.title is not None else None
+                    asset_description = asset.description if asset.description is not None else None
+
+                    if asset_role is None and asset_key in ["data", "metadata"]:
+                        asset_role = asset_key
+
                     if(Collection.is_uri(asset.href)):
                         ds.add_data_file(DataFile(asset_role, asset.href, title=asset_title, description=asset_description))
                     elif(os.path.isabs(asset.href)):
