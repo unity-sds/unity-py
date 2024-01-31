@@ -127,7 +127,7 @@ class Collection(object):
                     item_location = df.location.replace(data_dir,".")
 
                 item.add_asset(
-                    key = item_location.rsplit("/",1)[1],
+                    key = item_location,
                     asset = Asset(
                         href = item_location,
                         title = "{} file".format(df.type),
