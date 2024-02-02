@@ -72,7 +72,7 @@ class DataService(object):
                 file_type = dataset['assets'][asset_key].get('type', "")
                 title = dataset['assets'][asset_key].get('title', "")
                 description = dataset['assets'][asset_key].get('description', "")
-                roles = dataset['assets'][asset_key]["role"] if "role" in dataset['assets'][asset_key] else ["metadata"] if asset_key in ['metadata__cmr','metadata__data'] else [asset_key]
+                roles = dataset['assets'][asset_key]["roles"] if "roles" in dataset['assets'][asset_key] else ["metadata"] if asset_key in ['metadata__cmr','metadata__data'] else [asset_key]
                 ds.add_data_file(DataFile(file_type, location, roles=roles, title=title, description=description))
 
             datasets.append(ds)
