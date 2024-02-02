@@ -63,16 +63,17 @@ class DataService(object):
         token = self._session.get_auth().get_token()
         response = requests.get(url, headers={"Authorization": "Bearer " + token})
         results = response.json()['features']
-
+        
         for dataset in results:
             ds = Dataset(dataset['id'], collection.collection_id, dataset['properties']['start_datetime'], dataset['properties']['end_datetime'], dataset['properties']['created'])
-
-            for filename in dataset['assets']:
-                location = dataset['assets'][filename]['href']
-                file_type = dataset['assets'][filename]['type']
-                title = dataset['assets'][filename]['title']
-                description = dataset['assets'][filename]['description']
-                ds.add_data_file(DataFile(file_type, location, title=title, description=description))
+            
+            for asset_key in dataset['assets']:
+                location = dataset['assets'][asset_key]['href']
+                file_type = dataset['assets'][asset_key].get('type', "")
+                title = dataset['assets'][asset_key].get('title', "")
+                description = dataset['assets'][asset_key].get('description', "")
+                roles = dataset['assets'][asset_key]["role"] if "role" in dataset['assets'][asset_key] else ["metadata"] if asset_key in ['metadata__cmr','metadata__data'] else [asset_key]
+                ds.add_data_file(DataFile(file_type, location, roles=roles, title=title, description=description))
 
             datasets.append(ds)
 

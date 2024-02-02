@@ -50,10 +50,10 @@ def test_read_stac():
     assert len(data_files) == 2
     data_files = collection.data_files(["data"])
     assert len(data_files) == 1
-    assert data_files[0].type == "data"
+    assert data_files[0].roles == ["data"]
     data_files = collection.data_files(["metadata"])
     assert len(data_files) == 1
-    assert data_files[0].type == "metadata"
+    assert data_files[0].roles == ["metadata"]
 
 
 def test_write_stac():

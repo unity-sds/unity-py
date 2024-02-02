@@ -3,13 +3,14 @@ class DataFile(object):
     """
 
     def __str__(self):
-        return f'unity_sds_client.resources.DataFile(location={self.location},type={self.type})'
+        return f'unity_sds_client.resources.DataFile(location={self.location})'
 
     def __repr__(self):
         return self.__str__()
 
-    def __init__(self, type, location, title = "", description = "" ):
-        self.type = type
-        self.location = location
-        self.title = title
+    def __init__(self, type, location, roles = [], title = "", description = "" ):
         self.description = description
+        self.location = location
+        self.roles = roles
+        self.title = title
+        self.type = type

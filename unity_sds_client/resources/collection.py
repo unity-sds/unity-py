@@ -43,7 +43,7 @@ class Collection(object):
         """
         return self._datasets
     
-    def data_files(self, type=[]):
+    def data_files(self, roles=[]):
         """
             A method to list all assets (data, metdata, etc)
             Parameters
@@ -56,12 +56,12 @@ class Collection(object):
             files
                 List of returned datafiles
         """
-        if len(type) == 0:
+        if len(roles) == 0:
             return [file for files in [x.datafiles for x in self._datasets] for file in files]
         else:
-            return [file for files in [x.datafiles for x in self._datasets] for file in files if file.type in type]
+            return [file for files in [x.datafiles for x in self._datasets] for file in files if set(file.roles).intersection(set(roles))]
 
-    def data_locations(self, type=[]):
+    def data_locations(self, roles=[]):
         """
             A method to list all asset locations (data, metdata, etc)
             Parameters
@@ -74,10 +74,10 @@ class Collection(object):
             locations
                 List of returned asset locations
         """
-        if len(type) == 0:
+        if len(roles) == 0:
             return [file.location for files in [x.datafiles for x in self._datasets] for file in files]
         else:
-            return [file.location for files in [x.datafiles for x in self._datasets] for file in files if file.type in type]
+            return [file.location for files in [x.datafiles for x in self._datasets] for file in files if set(file.roles).intersection(set(roles))]
 
     def is_uri(path):
         if(path.startswith(tuple(["http:","https:","s3:"]))):
@@ -132,7 +132,7 @@ class Collection(object):
                         href = item_location,
                         title = "{} file".format(df.type),
                         description = "",
-                        roles = [df.type]
+                        roles = [df.role]
                     )
                 )
 
@@ -207,20 +207,21 @@ class Collection(object):
 
                 for asset_key in item.assets:
 
-                    asset = item.assets[asset_key]
-                    asset_role = asset.roles[0] if asset.roles is not None else None
-                    asset_title = asset.title if asset.title is not None else None
-                    asset_description = asset.description if asset.description is not None else None
+                    asset:Asset = item.assets[asset_key]
+                    asset_type = asset.media_type if asset.media_type else ''
+                    asset_roles = asset.roles if asset.roles is not None else []
+                    asset_title = asset.title if asset.title is not None else ''
+                    asset_description = asset.description if asset.description is not None else ''
 
-                    if asset_role is None and asset_key in ["data", "metadata"]:
-                        asset_role = asset_key
-
+                    if len(asset_roles) == 0 and asset_key in ["data", "metadata"]:
+                        asset_roles = [asset_key]
+                    
                     if(Collection.is_uri(asset.href)):
-                        ds.add_data_file(DataFile(asset_role, asset.href, title=asset_title, description=asset_description))
+                        ds.add_data_file(DataFile(asset_type, asset.href, roles=asset_roles, title=asset_title, description=asset_description))
                     elif(os.path.isabs(asset.href)):
-                        ds.add_data_file(DataFile(asset_role, asset.href, title=asset_title, description=asset_description))
+                        ds.add_data_file(DataFile(asset_type, asset.href, roles=asset_roles, title=asset_title, description=asset_description))
                     else:
-                        ds.add_data_file(DataFile(asset_role, os.path.join(stac_dir, asset.href), title=asset_title, description=asset_description))
+                        ds.add_data_file(DataFile(asset_type, os.path.join(stac_dir, asset.href), roles=asset_roles, title=asset_title, description=asset_description))
 
                 collection._datasets.append(ds)
             return collection
