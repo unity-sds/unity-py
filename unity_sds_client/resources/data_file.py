@@ -8,6 +8,9 @@ class DataFile(object):
     def __repr__(self):
         return self.__str__()
 
-    def __init__(self, type, location ):
-        self.type = type
+    def __init__(self, type, location, roles = [], title = "", description = "" ):
+        self.description = description
         self.location = location
+        self.roles = roles
+        self.title = title
+        self.type = type

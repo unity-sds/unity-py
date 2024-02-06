@@ -7,17 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-## Unreleased 
+## Unreleased [0.3.0]
 ### Added
 ### Fixed
 * fixed an issue with encoding a json deploy request twice [71](https://github.com/unity-sds/unity-py/issues/71)
 ### Changed
+* We now use the asset URI/HREF as the key into the assets, and use the "metadata" and "data" types as asset-roles: [69](https://github.com/unity-sds/unity-py/issues/69)
 ### Removed
 ### Security
 ### Deprecated
 
 
---------
 ## [0.2.2] - 2024-01-03 
 ### Added
 * Added project/venue support [5](https://github.com/unity-sds/unity-py/issues/58)
