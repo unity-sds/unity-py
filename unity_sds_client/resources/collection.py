@@ -132,7 +132,7 @@ class Collection(object):
                         href = item_location,
                         title = "{} file".format(df.type),
                         description = "",
-                        roles = [df.roles]
+                        roles = df.roles
                     )
                 )
 
