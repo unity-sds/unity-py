@@ -3,6 +3,7 @@ from unity_sds_client.resources.collection import Collection, Dataset, DataFile
 import datetime
 import pytest
 import os
+import json
 
 @pytest.fixture
 def cleanup_update_test():
@@ -83,7 +84,8 @@ def test_unity_to_stac():
     #Add 2 files to the dataset
     dataset.add_data_file(DataFile("data","./file.nc"))
     dataset.add_data_file(DataFile("metadadata", "./file.xml"))
-    assert len(dataset.datafiles) == 2
+    dataset.add_data_file(DataFile("data", "./file.xml"))
+    assert len(dataset.datafiles) == 3
 
 
     # Add arbitrary metadata to the product
@@ -99,10 +101,18 @@ def test_unity_to_stac():
     dataset2.add_data_file(DataFile("metadadata",application_output_directory + "/file2.xml"))
     collection.add_dataset(dataset2)
 
-    assert len(dataset.datafiles) == 2
+    assert len(dataset.datafiles) == 3
     assert len(dataset2.datafiles) == 2
 
     Collection.to_stac(collection, application_output_directory)
+
+    # Test to make sure the keys don't start with './'
+
+    f = open(
+        application_output_directory + "/SNDR.SS1330.CHIRP.20230615T0131.m06.g001.L1_AQ_CAL.std.v02_54.G.200615152827.json")
+    raw_stac = json.load(f)
+    for k in raw_stac['assets'].keys():
+        assert k.startswith("./") is not True
 
 
     # Read in the just written stac file to confirm paths are absolute

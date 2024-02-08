@@ -124,10 +124,15 @@ class Collection(object):
                 if(Collection.is_uri(df.location)):
                     item_location = df.location
                 else:
-                    item_location = df.location.replace(data_dir,".")
+                    item_location = df.location.replace(data_dir, ".")
+
+                key = item_location
+
+                if key.startswith("./"):
+                    key = key.replace("./", "")
 
                 item.add_asset(
-                    key = item_location,
+                    key = key,
                     asset = Asset(
                         href = item_location,
                         title = "{} file".format(df.type),
