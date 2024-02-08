@@ -129,7 +129,7 @@ class Collection(object):
                 key = item_location
 
                 if key.startswith("./"):
-                    key = key.replace("./", "")
+                    key = os.path.basename(key)
 
                 item.add_asset(
                     key = key,
