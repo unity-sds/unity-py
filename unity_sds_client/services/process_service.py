@@ -129,7 +129,7 @@ class ProcessService(object):
             'Content-type': 'application/json'
         })
         url = self.endpoint + "processes"
-        response = requests.post(url, headers=headers, json=json.dumps(data))
+        response = requests.post(url, headers=headers, json=data)
         response.raise_for_status()
 
         return response
