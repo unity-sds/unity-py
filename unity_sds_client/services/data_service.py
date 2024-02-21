@@ -97,9 +97,9 @@ class DataService(object):
             raise UnityException(f"Collection Identifiers must start with urn:nasa:unity:{self._session._project}:{self._session._venue}")
 
         collection = {
-            "title": "Collection " + collection_id,
+            "title": "Collection " + collection.collection_id,
             "type": "Collection",
-            "id": collection_id,
+            "id": collection.collection_id,
             "stac_version": "1.0.0",
             "description": "TODO",
             "providers": [
