@@ -1,4 +1,6 @@
 import requests
+
+from unity_sds_client.unity_exception import UnityException
 from unity_sds_client.unity_session import UnitySession
 from unity_sds_client.resources.collection import Collection
 from unity_sds_client.resources.dataset import Dataset
@@ -78,3 +80,99 @@ class DataService(object):
             datasets.append(ds)
 
         return datasets
+
+    def create_collection(self, collection: type = Collection, dry_run=False):
+
+        # Collection must not be None
+        if collection is None:
+            raise UnityException("Invalid collection provided.")
+
+        # test version Information?
+
+        # Test collection ID name: project and venue
+        if self._session._project is None or self._session._venue is None:
+            raise UnityException("To create a collection, the Unity session Project and Venue must be set!")
+
+        if not collection.collection_id.startswith(f"urn:nasa:unity:{self._session._project}:{self._session._venue}"):
+            raise UnityException(f"Collection Identifiers must start with urn:nasa:unity:{self._session._project}:{self._session._venue}")
+
+        collection = {
+            "title": "Collection " + collection_id,
+            "type": "Collection",
+            "id": collection_id,
+            "stac_version": "1.0.0",
+            "description": "TODO",
+            "providers": [
+                {"name": "unity"}
+            ],
+            "links": [
+                {
+                    "rel": "root",
+                    "href": "./collection.json?bucket=unknown_bucket&regex=%7BcmrMetadata.Granule.Collection.ShortName%7D___%7BcmrMetadata.Granule.Collection.VersionId%7D",
+                    "type": "application/json",
+                    "title": "test_file01.nc"
+                },
+                {
+                    "rel": "item",
+                    "href": "./collection.json?bucket=protected&regex=%5Etest_file.%2A%5C.nc%24",
+                    "type": "data",
+                    "title": "test_file01.nc"
+                },
+                {
+                    "rel": "item",
+                    "href": "./collection.json?bucket=protected&regex=%5Etest_file.%2A%5C.nc%5C.cas%24",
+                    "type": "metadata",
+                    "title": "test_file01.nc.cas"
+                },
+                {
+                    "rel": "item",
+                    "href": "./collection.json?bucket=private&regex=%5Etest_file.%2A%5C.cmr%5C.xml%24",
+                    "type": "metadata",
+                    "title": "test_file01.cmr.xml"
+                }
+            ],
+            "stac_extensions": [],
+            "extent": {
+                "spatial": {
+                    "bbox": [
+                        [
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                },
+                "temporal": {
+                    "interval": [
+                        [
+                            "2022-10-04T00:00:00.000Z",
+                            "2022-10-04T23:59:59.999Z"
+                        ]
+                    ]
+                }
+            },
+            "license": "proprietary",
+            "summaries": {
+                "granuleId": [
+                    "^test_file.*$"
+                ],
+                "granuleIdExtraction": [
+                    "(^test_file.*)(\\.nc|\\.nc\\.cas|\\.cmr\\.xml)"
+                ],
+                "process": [
+                    "stac"
+                ]
+            }
+        }
+        if not dry_run:
+            url = self.endpoint + f'am-uds-dapa/collections'
+            token = self._session.get_auth().get_token()
+            response = requests.post(url, headers={"Authorization": "Bearer " + token},  json=collection)
+            if response.status_code is not 202:
+                raise UnityException("Error creating collection: " + response.message)
+
+
+
+
+

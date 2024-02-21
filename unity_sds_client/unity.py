@@ -37,7 +37,7 @@ class Unity(object):
         :param venue: the venue to use when interacting with venue specific services. Used in building the restful
         endpoint.
         """
-        self._session._venue  = venue
+        self._session._venue = venue
 
     def set_venue_id(self, venue_id):
         """
