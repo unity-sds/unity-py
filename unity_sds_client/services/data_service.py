@@ -169,7 +169,7 @@ class DataService(object):
             url = self.endpoint + f'am-uds-dapa/collections'
             token = self._session.get_auth().get_token()
             response = requests.post(url, headers={"Authorization": "Bearer " + token},  json=collection)
-            if response.status_code is not 202:
+            if response.status_code != 202:
                 raise UnityException("Error creating collection: " + response.message)
 
 
