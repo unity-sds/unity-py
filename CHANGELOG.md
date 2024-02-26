@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased [0.3.0]
 ### Added
+* We've added the ability to override settings in the default config file by passing in a config file with the settings needing to be overridden when instantiating a Unity object. [56](https://github.com/unity-sds/unity-py/issues/56)
 ### Fixed
 * fixed an issue with encoding a json deploy request twice [71](https://github.com/unity-sds/unity-py/issues/71)
 ### Changed
