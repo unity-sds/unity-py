@@ -16,6 +16,10 @@ def test_default_unity_client():
     client = Unity()
     assert True == True
 
+def test_unity_client_config_override():
+    client = Unity(config_file_override="tests/test_files/config_override.cfg")
+    setting = client._session._config.get("TEST","client_id")
+    assert setting == "THIS_IS_A_TEST_CLIENT_ID"
 
 @pytest.mark.regression
 def test_example_regression_test(cleanup_update_test):
