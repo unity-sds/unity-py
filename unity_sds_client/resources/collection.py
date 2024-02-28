@@ -28,6 +28,7 @@ class Collection(object):
         self._beginning_time = None
         self._ending_time = None
 
+
     def add_dataset(self, dataset: Dataset):
         self._datasets.append(dataset)
 
