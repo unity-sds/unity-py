@@ -40,7 +40,7 @@ class DataService(object):
         if endpoint is None:
             self.endpoint = self._session.get_unity_href()
 
-    def get_collections(self):
+    def get_collections(self, limit=10):
         """Returns a list of collections
 
         Returns
@@ -51,7 +51,7 @@ class DataService(object):
         """
         url = self.endpoint + "am-uds-dapa/collections"
         token = self._session.get_auth().get_token()
-        response = requests.get(url, headers={"Authorization": "Bearer " + token})
+        response = requests.get(url, headers={"Authorization": "Bearer " + token}, params={"limit": limit})
         # build collection objects here
         collections = []
         for data_set in response.json()['features']:
@@ -59,16 +59,19 @@ class DataService(object):
 
         return collections
 
-    def get_collection_data(self, collection: type= Collection):
+    def get_collection_data(self, collection: type = Collection, limit=10, filter: str = None):
         datasets = []
         url = self.endpoint + f'am-uds-dapa/collections/{collection.collection_id}/items'
         token = self._session.get_auth().get_token()
-        response = requests.get(url, headers={"Authorization": "Bearer " + token})
+        params = {"limit": limit}
+        if filter is not None:
+            params["filter"] = filter
+        response = requests.get(url, headers={"Authorization": "Bearer " + token}, params=params)
         results = response.json()['features']
-        
+
         for dataset in results:
             ds = Dataset(dataset['id'], collection.collection_id, dataset['properties']['start_datetime'], dataset['properties']['end_datetime'], dataset['properties']['created'])
-            
+
             for asset_key in dataset['assets']:
                 location = dataset['assets'][asset_key]['href']
                 file_type = dataset['assets'][asset_key].get('type', "")
@@ -172,7 +175,13 @@ class DataService(object):
             if response.status_code != 202:
                 raise UnityException("Error creating collection: " + response.message)
 
+    def define_custom_metadata(self, metadata: dict):
+        if self._session._project is None or self._session._venue is None:
+            raise UnityException("To add custom metadata, the Unity session Project and Venue must be set!")
 
-
-
-
+        url = self.endpoint + f'am-uds-dapa/admin/custom_metadata/{self._session._project}'
+        token = self._session.get_auth().get_token()
+        response = requests.put(url, headers={"Authorization": "Bearer " + token},
+                                params={"venue": self._session._venue}, json=metadata)
+        if response.status_code != 200:
+            raise UnityException("Error adding custom metadata: " + response.message)
