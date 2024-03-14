@@ -10,8 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * We've added the ability to override settings in the default config file by passing in a config file with the settings needing to be overridden when instantiating a Unity object. [56](https://github.com/unity-sds/unity-py/issues/56)
 * Collection creation (create_collection) through dataService library
+* Added support for defining custom metadata for project and venue.
 ### Fixed
 ### Changed
+* Updated get_collections and get_collection_data to support limit parameter.
+* Updated get_collection_data to support filter parameter which takes CQL string.
 ### Removed
 ### Security
 ### Deprecated
