@@ -40,7 +40,7 @@ class DataService(object):
         if endpoint is None:
             self.endpoint = self._session.get_unity_href()
 
-    def get_collections(self, limit=10):
+    def get_collections(self, limit=10, output_stac=False):
         """Returns a list of collections
 
         Returns
@@ -52,6 +52,9 @@ class DataService(object):
         url = self.endpoint + "am-uds-dapa/collections"
         token = self._session.get_auth().get_token()
         response = requests.get(url, headers={"Authorization": "Bearer " + token}, params={"limit": limit})
+        if output_stac:
+            return response.json()
+
         # build collection objects here
         collections = []
         for data_set in response.json()['features']:
@@ -59,7 +62,7 @@ class DataService(object):
 
         return collections
 
-    def get_collection_data(self, collection: type = Collection, limit=10, filter: str = None):
+    def get_collection_data(self, collection: type = Collection, limit=10, filter: str = None, output_stac=False):
         datasets = []
         url = self.endpoint + f'am-uds-dapa/collections/{collection.collection_id}/items'
         token = self._session.get_auth().get_token()
@@ -67,10 +70,12 @@ class DataService(object):
         if filter is not None:
             params["filter"] = filter
         response = requests.get(url, headers={"Authorization": "Bearer " + token}, params=params)
+        if output_stac:
+            return response.json()
         results = response.json()['features']
 
         for dataset in results:
-            ds = Dataset(dataset['id'], collection.collection_id, dataset['properties']['start_datetime'], dataset['properties']['end_datetime'], dataset['properties']['created'])
+            ds = Dataset(dataset['id'], collection.collection_id, dataset['properties']['start_datetime'], dataset['properties']['end_datetime'], dataset['properties']['created'], properties=dataset['properties'])
 
             for asset_key in dataset['assets']:
                 location = dataset['assets'][asset_key]['href']

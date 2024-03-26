@@ -56,6 +56,15 @@ def test_read_stac():
     assert len(data_files) == 1
     assert data_files[0].roles == ["metadata"]
 
+    # Try a "classic" catalog + item files stac catalog
+    collection = Collection.from_stac("tests/test_files/dataset_with_properties.json")
+    datasets = collection.datasets
+    # Added 3/26/24 to check the properties being added
+    assert datasets[0].properties is not None
+    assert datasets[0].properties['soil']
+    print("Properties is not null")
+
+
 
 def test_write_stac():
     collection = Collection.from_stac("tests/test_files/cmr_granules.json")

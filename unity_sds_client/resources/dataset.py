@@ -12,7 +12,7 @@ class Dataset(object):
     def __repr__(self):
         return self.__str__()
 
-    def __init__(self, name, collection_id, start_time, end_time, creation_time ):
+    def __init__(self, name, collection_id, start_time, end_time, creation_time, properties=None ):
         """Dataset object construction)
 
         Parameters
@@ -43,6 +43,12 @@ class Dataset(object):
         self.properties = {}
         self.geometry = None
         self.bbox = None
+
+        #add non-reserved properties
+        if properties is not None:
+            for key, value in properties.items():
+                if key not in ['start_datetime','created', 'end_datetime']:
+                    self.properties[key] = value
 
     def add_data_file(self, datafile: type=DataFile):
         """adds a data file to a dataset
