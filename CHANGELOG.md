@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Collection creation (create_collection) through dataService library
 * Added support for defining custom metadata for project and venue.
 * Added methods to return STAC content instead of unity domain objects if requested
-* added properties parsing of stac metadata to dataset objects
+* Added properties parsing of stac metadata to dataset objects
 ### Fixed
 ### Changed
 * Updated get_collections and get_collection_data to support limit parameter.
