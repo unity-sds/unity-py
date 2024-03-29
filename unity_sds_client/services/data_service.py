@@ -73,7 +73,7 @@ class DataService(object):
         if output_stac:
             return response.json()
         results = response.json()['features']
-
+        
         for dataset in results:
             ds = Dataset(dataset['id'], collection.collection_id, dataset['properties']['start_datetime'], dataset['properties']['end_datetime'], dataset['properties']['created'], properties=dataset['properties'])
 
