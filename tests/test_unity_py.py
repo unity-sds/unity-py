@@ -16,6 +16,10 @@ def test_default_unity_client():
     client = Unity()
     assert True == True
 
+def test_unity_client_config_override():
+    client = Unity(config_file_override="tests/test_files/config_override.cfg")
+    setting = client._session._config.get("TEST","client_id")
+    assert setting == "THIS_IS_A_TEST_CLIENT_ID"
 
 @pytest.mark.regression
 def test_example_regression_test(cleanup_update_test):
@@ -24,6 +28,14 @@ def test_example_regression_test(cleanup_update_test):
     dataManager = s.client(Services.DATA_SERVICE)
     collections = dataManager.get_collections()
     assert len(collections) > 0
+
+@pytest.mark.regression
+def test_example_regression_test(cleanup_update_test):
+    print("Example collection test")
+    s = Unity()
+    dataManager = s.client(Services.DATA_SERVICE)
+    collections_json = dataManager.get_collections(output_stac=True)
+    assert collections_json is not None
 
 
 @pytest.mark.regression

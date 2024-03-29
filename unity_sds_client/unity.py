@@ -15,13 +15,15 @@ class Unity(object):
     is passed to different services and resources as needed.
     """
 
-    def __init__(self, environment: UnityEnvironments = UnityEnvironments.TEST):
+    def __init__(self, environment: UnityEnvironments = UnityEnvironments.TEST, config_file_override:str = None):
         """
         :param environment: the default environment for a session to work with. Defaults to 'TEST' unity environment.
+        :param config_file_override: absolute path to a config file containing settings to override default config
         """
         env = environment
         config = _read_config([
-            os.path.dirname(os.path.realpath(__file__)) + "/envs/environments.cfg".format(str(env.value).lower())
+            os.path.dirname(os.path.realpath(__file__)) + "/envs/environments.cfg".format(str(env.value).lower()),
+            config_file_override
         ])
         self._session = UnitySession(env.value, config)
 
@@ -37,7 +39,7 @@ class Unity(object):
         :param venue: the venue to use when interacting with venue specific services. Used in building the restful
         endpoint.
         """
-        self._session._venue  = venue
+        self._session._venue = venue
 
     def set_venue_id(self, venue_id):
         """

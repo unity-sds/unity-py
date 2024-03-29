@@ -28,6 +28,7 @@ class Collection(object):
         self._beginning_time = None
         self._ending_time = None
 
+
     def add_dataset(self, dataset: Dataset):
         self._datasets.append(dataset)
 
@@ -199,7 +200,6 @@ class Collection(object):
                 ds = Dataset(item.id, id, item.properties.get("start_datetime", None),
                              item.properties.get("end_datetime", None), item.properties.get("created", None))
                 if item.collection_id is not None and item.collection_id != id:
-                     print ("if2")
                      ds = Dataset(item.id, item.collection_id, item.properties.get("start_datetime", None),
                                  item.properties.get("end_datetime", None), item.properties.get("created", None))
 
