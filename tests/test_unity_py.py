@@ -29,6 +29,14 @@ def test_example_regression_test(cleanup_update_test):
     collections = dataManager.get_collections()
     assert len(collections) > 0
 
+@pytest.mark.regression
+def test_example_regression_test(cleanup_update_test):
+    print("Example collection test")
+    s = Unity()
+    dataManager = s.client(Services.DATA_SERVICE)
+    collections_json = dataManager.get_collections(output_stac=True)
+    assert collections_json is not None
+
 
 @pytest.mark.regression
 def test_example_process(cleanup_update_test):
