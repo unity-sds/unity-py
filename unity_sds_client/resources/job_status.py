@@ -10,4 +10,11 @@ class JobStatus(Enum):
     DISMISSED = "dismissed"
     FAILED = "failed"
     RUNNING = "running"
-    SUCCEEDED = "succeeded"
+    SUCCESSFUL = "successful"
+
+    def from_status(status):
+        try:
+            job_status = JobStatus(status)
+        except ValueError:
+            raise ValueError(f"{status} is not a valid job_status")
+        return job_status

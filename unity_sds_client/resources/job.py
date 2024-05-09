@@ -15,15 +15,24 @@ class Job(object):
     def __str__(self):
         return '''unity_sds_client.resources.Job(
     id="{}",
+    process="{}",
     status="{}",
     inputs={}
 )'''.format(
-    self.id,
-    self.status.value if self.status else "",
-    self.inputs
-)
+            self.id,
+            self._process_id,
+            self.status.value if self.status else "",
+            self.inputs
+        )
 
-    def __init__(self, session: UnitySession, endpoint:str, process:Process, id:int, status:JobStatus = None, inputs:object = None):
+    def __init__(
+            self,
+            session: UnitySession,
+            endpoint: str,
+            process_id: str,
+            job_id: int,
+            status: JobStatus = None,
+            inputs: object = None):
         """
         Initialize the Job class.
 
@@ -51,16 +60,15 @@ class Job(object):
 
         self._session = session
         self._endpoint = endpoint
-        self._process = process
-        self.id = id
+        self._process_id = process_id
+        self.id = job_id
         self.status = status
         self.inputs = None
 
     def get_status(self):
-
         token = self._session.get_auth().get_token()
         headers = get_headers(token)
-        url = self._endpoint + "processes/{}/jobs/{}".format(self._process.id, self.id)
+        url = self._endpoint + "processes/{}/jobs/{}".format(self._process_id, self.id)
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         self._status = JobStatus(response.json()['status'])
@@ -68,23 +76,21 @@ class Job(object):
         return self._status
 
     def get_result(self):
-    
         token = self._session.get_auth().get_token()
         headers = get_headers(token)
-        url = self._endpoint + "processes/{}/jobs/{}/result".format(self._process.id, self.id)
+        url = self._endpoint + "processes/{}/jobs/{}/result".format(self._process_id, self.id)
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         json_result = response.json()
-        
+
         return json_result
 
     def dismiss(self):
-    
         token = self._session.get_auth().get_token()
         headers = get_headers(token)
-        job_url = self._endpoint + "processes/{}/jobs/{}".format(self._process.id, self.id)
+        job_url = self._endpoint + "processes/{}/jobs/{}".format(self._process_id, self.id)
         response = requests.delete(job_url, headers=headers)
         response.raise_for_status()
         json_result = response.json()['statusInfo']
-        
+
         return json_result
