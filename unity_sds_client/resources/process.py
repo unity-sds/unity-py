@@ -1,7 +1,16 @@
+import traceback
+
 import requests
+from unity_sps_ogc_processes_api_python_client import Execute
+from unity_sps_ogc_processes_api_python_client.exceptions import NotFoundException
+
+from unity_sds_client.resources.job_status import JobStatus
+from unity_sds_client.unity_exception import UnityException
 from unity_sds_client.unity_session import UnitySession
 from unity_sds_client.resources.job import Job
-from unity_sds_client.utils.http import get_headers
+import unity_sps_ogc_processes_api_python_client
+from unity_sps_ogc_processes_api_python_client.rest import ApiException
+from unity_sps_ogc_processes_api_python_client.models.process_list import ProcessList
 
 
 class Process(object):
@@ -61,66 +70,37 @@ class Process(object):
         self.inputs = inputs
         self.outputs = outputs
 
-    # def __init__(
-    #         self,
-    #         session: UnitySession,
-    #         endpoint: str,
-    #         id: str,
-    #         title: str,
-    #         abstract: str,
-    #         execution_unit: str,
-    #         immediate_deployment: bool,
-    #         job_control_options: list,
-    #         keywords: str,
-    #         output_transmission: list,
-    #         ows_context_url: str,
-    #         process_version: str
-    # ):
-    #     """
-    #     Initialize the Process class.
-    #
-    #     Parameters
-    #     ----------
-    #     session : UnitySession
-    #         The Unity Session that will be used to facilitate making calls to the SPS endpoints.
-    #     endpoint : str
-    #         The endpoint to call for executing processes
-    #
-    #     Returns
-    #     -------
-    #     Process
-    #         The Process object.
-    #
-    #     """
-    #
-    #     self._session = session
-    #     self._endpoint = endpoint
-    #     self.id = id
-    #     self.title = title
-    #     self.abstract = abstract
-    #     self.execution_unit = execution_unit
-    #     self.immediate_deployment = immediate_deployment
-    #     self.job_control_options = job_control_options
-    #     self.keywords = keywords
-    #     self.output_transmission = output_transmission
-    #     self.ows_context_url = ows_context_url
-    #     self.process_version = process_version
-
     def execute(self, data) -> Job:
+        '''
+
+        @param data:
+        @return Job:
+        '''
         token = self._session.get_auth().get_token()
-        headers = get_headers(token, {
-            'Content-type': 'application/json'
-        })
-        url = self._endpoint + "processes/{}/jobs".format(self.id)
-        response = requests.post(url, headers=headers, json=data)
-        response.raise_for_status()
+        url = self._endpoint
+        execution = Execute.from_dict(data)
+        configuration = unity_sps_ogc_processes_api_python_client.Configuration(
+            host=url,
+            access_token=token
+        )
+        with unity_sps_ogc_processes_api_python_client.ApiClient(configuration) as api_client:
+            # Create an instance of the API class
+            api_instance = unity_sps_ogc_processes_api_python_client.DefaultApi(api_client)
+            try:
+                # Retrieve the list of available processes
+                job = api_instance.execute_processes_process_id_execution_post(self.id, execution)  # add auth
+                return Job(
+                            self._session,
+                            self._endpoint,
+                            job.process_id,
+                            job.job_id,
+                            JobStatus(job.status.value)
+                    )
 
-        # Parse the job_id from the returned 'location' header
-        job_location = response.headers['location']
-        if "http://127.0.0.1:5000" in job_location:
-            job_location = job_location.replace("http://127.0.0.1:5000/", self._endpoint)
-        job_id = job_location.replace(url + "/", "")
+            except NotFoundException as nfe:
+                raise UnityException(nfe.body)
+            except Exception as e:
+                print(traceback.format_exc())
+                print("Exception when calling DefaultApi->process_list_processes_get: %s\n" % e)
+                raise UnityException(e.body)
 
-        job = Job(self._session, self._endpoint, self, job_id)
-
-        return job
