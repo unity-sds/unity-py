@@ -623,7 +623,7 @@ description = "Unity Processing API conforming to the OGC API - Processes - Part
 optional = false
 python-versions = "^3.7"
 files = []
-develop = true
+develop = false
 
 [package.dependencies]
 pydantic = ">=2"
@@ -632,8 +632,10 @@ typing-extensions = ">=4.7.1"
 urllib3 = ">= 1.25.3"
 
 [package.source]
-type = "directory"
-url = "../unity-sps-ogc-processes-api-client-python"
+type = "git"
+url = "https://github.com/unity-sds/unity-sps-ogc-processes-api-client-python.git"
+reference = "2.0.2-beta.0"
+resolved_reference = "efd71c2b2a58bef97dfe35768184747ca18d3cd5"
 
 [[package]]
 name = "urllib3"
@@ -670,4 +672,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "a126822d4a5af31ec305b8db6122088347a0bec196e015d361b9e2e82e03b0ca"
+content-hash = "77b155dfac5c8c06cf50ac53e35605043dece4e23f98977bc75e39e74dd24531"
