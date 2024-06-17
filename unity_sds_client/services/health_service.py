@@ -23,6 +23,8 @@ class HealthService(object):
             List of applications and their health statses
         """
 
+        self._health_statuses = None
+
     def get_health_status(self):
         """
         Returns a list of services and their respective health status
@@ -30,7 +32,7 @@ class HealthService(object):
 
         # Get Health Information
         # Stubbed in health data until Health API endpoint is available
-        health_json = [
+        self._health_statuses = [
           {
             "service": "airflow",
             "landingPage":"https://unity.jpl.nasa.gov/project/venue/processing/ui",
@@ -63,4 +65,20 @@ class HealthService(object):
           }
         ]
 
-        return health_json
+        return self._health_statuses
+    
+    def print_health_status(self):
+
+        if self._health_statuses is None:
+            self.get_health_status()
+
+        health_status_title = "HEALTH STATUSES"
+        response = f"\n\n{health_status_title}\n"
+        response = response + len(health_status_title) * "-" + "\n\n"
+        for service in self._health_statuses:
+            response = response + f"{service["service"]}\n"
+            for status in service["healthChecks"]:
+                response = response + f"{status["date"]}: {status["status"]}\n"
+            response = response + "\n"
+        
+        print(response)

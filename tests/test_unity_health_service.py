@@ -25,10 +25,20 @@ def test_health_service_client_creation(cleanup_update_test):
 @pytest.mark.regression
 def test_health_status_retrieval(cleanup_update_test):
     """
-    Test that health statuses can be retrieved from the health service.
+    Test that health statuses can be retrieved using the health service.
     """
     print("Example health status check")
     s = Unity()
     health_service = s.client(UnityServices.HEALTH_SERVICE)
-    heatlh_statuses = health_service.get_health_status()
-    assert heatlh_statuses is not None
+    health_statuses = health_service.get_health_status()
+    assert health_statuses is not None
+
+@pytest.mark.regression
+def test_health_status_printing(cleanup_update_test):
+    """
+    Test that health statuses can be printed using the health service.
+    """
+    print("Example health status check")
+    s = Unity()
+    health_service = s.client(UnityServices.HEALTH_SERVICE)
+    health_service.print_health_status()

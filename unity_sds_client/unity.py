@@ -75,11 +75,14 @@ class Unity(object):
                 response = response + "{}: {}\n".format(setting, dict(config[section])[setting])
 
         health_service = self.client(UnityServices.HEALTH_SERVICE)
-        health_status_title = "Health Statuses"
+        health_status_title = "HEALTH STATUSES"
         response = response + "\n\n{}\n".format(health_status_title)
         response = response + len(health_status_title) * "-" + "\n\n"
         for service in health_service.get_health_status():
-            response = response + "{}: {}\n".format(service["service"], service["healthChecks"][0]["status"])
+            response = response + f"{service["service"]}\n"
+            for status in service["healthChecks"]:
+                response = response + f"{status["date"]}: {status["status"]}\n"
+            response = response + "\n"
 
         return response
 
