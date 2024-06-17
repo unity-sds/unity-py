@@ -37,3 +37,14 @@ def test_health_status_printing():
     s = Unity()
     health_service = s.client(UnityServices.HEALTH_SERVICE)
     health_service.print_health_status()
+
+@pytest.mark.regression
+def test_health_service_printing():
+    """
+    Test that when the health service client is printed, it outputs
+    the health status information
+    """
+    print("Example health status printing of health service object.")
+    s = Unity()
+    health_service = s.client(UnityServices.HEALTH_SERVICE)
+    print(health_service)

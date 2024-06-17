@@ -25,6 +25,9 @@ class HealthService(object):
 
         self._health_statuses = None
 
+    def __str__(self):
+        return self.generate_health_status_report()
+
     def get_health_status(self):
         """
         Returns a list of services and their respective health status
@@ -67,18 +70,27 @@ class HealthService(object):
 
         return self._health_statuses
     
-    def print_health_status(self):
+    def generate_health_status_report(self):
+        """
+        Return a generated report of health status information
+        """
 
         if self._health_statuses is None:
             self.get_health_status()
 
-        health_status_title = "HEALTH STATUSES"
-        response = f"\n\n{health_status_title}\n"
-        response = response + len(health_status_title) * "-" + "\n\n"
+        health_status_title = "HEALTH STATUS REPORT"
+        report = f"\n\n{health_status_title}\n"
+        report = report + len(health_status_title) * "-" + "\n\n"
         for service in self._health_statuses:
-            response = response + f"{service["service"]}\n"
+            report = report + f"{service["service"]}\n"
             for status in service["healthChecks"]:
-                response = response + f"{status["date"]}: {status["status"]}\n"
-            response = response + "\n"
+                report = report + f"{status["date"]}: {status["status"]}\n"
+            report = report + "\n"
         
-        print(response)
+        return report
+
+    def print_health_status(self):
+        """
+        Print the health status report
+        """
+        print(f"{self.generate_health_status_report()}")

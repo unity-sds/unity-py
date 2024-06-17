@@ -74,15 +74,7 @@ class Unity(object):
             for setting in dict(config[section]):
                 response = response + "{}: {}\n".format(setting, dict(config[section])[setting])
 
-        health_service = self.client(UnityServices.HEALTH_SERVICE)
-        health_status_title = "HEALTH STATUSES"
-        response = response + "\n\n{}\n".format(health_status_title)
-        response = response + len(health_status_title) * "-" + "\n\n"
-        for service in health_service.get_health_status():
-            response = response + f"{service["service"]}\n"
-            for status in service["healthChecks"]:
-                response = response + f"{status["date"]}: {status["status"]}\n"
-            response = response + "\n"
+        response = response + self.client(UnityServices.HEALTH_SERVICE).generate_health_status_report()
 
         return response
 
