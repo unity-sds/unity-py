@@ -85,7 +85,9 @@ class HealthService(object):
             service_name = service["service"]
             report = report + f"{service_name}\n"
             for status in service["healthChecks"]:
-                report = report + f"{status["date"]}: {status["status"]}\n"
+                service_status = status["status"]
+                service_status_date = status["date"]
+                report = report + f"{service_status_date}: {service_status}\n"
             report = report + "\n"
         
         return report
