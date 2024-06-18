@@ -82,7 +82,8 @@ class HealthService(object):
         report = f"\n\n{health_status_title}\n"
         report = report + len(health_status_title) * "-" + "\n\n"
         for service in self._health_statuses:
-            report = report + f"{service["service"]}\n"
+            service_name = service["service"]
+            report = report + f"{service_name}\n"
             for status in service["healthChecks"]:
                 report = report + f"{status["date"]}: {status["status"]}\n"
             report = report + "\n"
