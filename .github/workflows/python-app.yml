@@ -54,5 +54,4 @@ jobs:
     - name: Coveralls
       uses: coverallsapp/github-action@v2
       with:
-        format: python
-        file: .coverage
+        debug: true
