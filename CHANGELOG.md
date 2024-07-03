@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased (0.5.0)
+## Unreleased 
 
 ### Added
 * Health Service with variuos functions that allow user's to inspect the health status of the system
 ### Fixed
 ### Changed
 * Health status information is included when an instantiated unity object is printed.
+* OGC Process API support to use ogc_processes client published by SPS
 ### Removed
 ### Security
 ### Deprecated
