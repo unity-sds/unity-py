@@ -2,6 +2,7 @@ import os
 from configparser import ConfigParser, ExtendedInterpolation
 from unity_sds_client.services.data_service import DataService
 from unity_sds_client.services.process_service import ProcessService
+from unity_sds_client.services.health_service import HealthService
 from unity_sds_client.unity_session import UnitySession
 from unity_sds_client.unity_exception import UnityException
 from unity_sds_client.unity_environments import UnityEnvironments
@@ -55,21 +56,25 @@ class Unity(object):
         """
         if service_name == UnityServices.DATA_SERVICE:
             return DataService(session=self._session)
+        if service_name == UnityServices.HEALTH_SERVICE:
+            return HealthService(session=self._session)
         elif service_name == UnityServices.PROCESS_SERVICE:
             return ProcessService(session=self._session)
         else:
             raise UnityException("Invalid service name: " + str(service_name))
 
     def __str__(self):
-        response = "UNITY CONFIGURATION"
-        response = response + "\n\n" + len(response) * "-" + "\n"
+        response = "\nUNITY CONFIGURATION"
+        response = response + "\n" + len(response) * "-" + "\n"
         
         config = self._session.get_config()
         config_sections = config.sections()
         for section in config_sections:
-            response = response + "\n{}\n".format(section)
+            response = response + "\n[{}]\n".format(section)
             for setting in dict(config[section]):
                 response = response + "{}: {}\n".format(setting, dict(config[section])[setting])
+
+        response = response + self.client(UnityServices.HEALTH_SERVICE).generate_health_status_report()
 
         return response
 
