@@ -54,6 +54,7 @@ jobs:
     - name: Coveralls
       uses: coverallsapp/github-action@v2.3.0
   version:
+    needs: build
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push' 
     runs-on: ubuntu-latest
     steps:
@@ -75,5 +76,22 @@ jobs:
           git config --global user.email 'mdps@noreply.github.com'
           git commit -am "development version bump. [skip actions]"
           git push
+      - name: Install dependencies
+        run: |
+          poetry install
+      - name: build
+        run: |
+          poetry build
+      - name: Get version
+        id: get-version
+        run: |
+          echo "::set-output name=current_version::$(poetry version | awk '{print $2}')"
+      - name: Publish a Python distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+    outputs:
+      publishedVersion: ${{ steps.get-version.outputs.current_version }}
         
 
