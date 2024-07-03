@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "unity-sds-client"
-version = "0.5.0"
+version = "0.5.0a0"
 description = "Unity-Py is a Python client to simplify interactions with NASA's Unity Platform."
 authors = ["Anil Natha, Mike Gangl"]
 readme = "README.md"
