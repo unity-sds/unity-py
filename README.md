@@ -13,7 +13,7 @@
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md) [![SLIM](https://img.shields.io/badge/Best%20Practices%20from-SLIM-blue)](https://nasa-ammos.github.io/slim/)
 
-[INSERT SCREENSHOT OF YOUR SOFTWARE, IF APPLICABLE]
+<span style="color:red"> **This repository has been archived. Please see https://github.com/unity-sds/unity-monorepo/tree/main/libs/unity-py for active development.** </span>.
 
 Unity-Py provides a seamless way to interact with NASA's Unity Platform using Python. Built to simplify the connection and data retrieval process, this client offers a programmatic interface to Unity's services.
 
